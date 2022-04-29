@@ -4,6 +4,7 @@ import './App.css';
 import Home from './home/Home';
 import RechteckQS from './rechteck_qs/RechteckQS';
 import { Routes, Route } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function App() {
