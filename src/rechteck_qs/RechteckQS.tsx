@@ -1,4 +1,5 @@
 import { Card, Col, Container, Dropdown, DropdownButton, Form, Navbar, Row } from 'react-bootstrap';
+import Graph from './Graph';
 
 
 function InputCard(props: any) {
@@ -60,11 +61,18 @@ export default function RechteckQS() {
 				</Col>
 				<Col xs={{ order: 1, span: 12 }} md={{ order: 2, span: 8 }} lg={{ order: 2, span: 9 }}>
 
-					<InputCard header="M-N-Interaktion">GRAPH</InputCard>
+					<InputCard header="M-N-Interaktion">
+						<Graph />
+					</InputCard>
 
-
-
-					<InputCard header="Widerstand">TODO</InputCard>
+					<InputCard header="Widerstand">
+						<p>
+							N<sub>Rd</sub> = 1000.0 kN
+						</p>
+						<p>
+							M<sub>Rd</sub> = 1698.1 kNm
+						</p>
+					</InputCard>
 
 				</Col>
 			</Row>
