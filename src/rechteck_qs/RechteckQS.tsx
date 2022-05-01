@@ -1,23 +1,10 @@
 import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
-import { Card, Col, Container, Form, Navbar, Row } from 'react-bootstrap';
+import { Col, Container, Form, Navbar, Row } from 'react-bootstrap';
+import { BetonList } from './BetonSelector';
 import Graph from './Graph';
+import InputCard from './InputCard';
+import { StahlList } from './StahlSelector';
 
-
-function InputCard(props: any) {
-	return <Card style={{ marginTop: "1em", marginBottom: "0em" }}>
-		<Card.Header style={{ display: "flex", alignItems: "center" }}>
-			{props.header}
-			{props.options &&
-				<Form.Select style={{ marginLeft: "1em" }} disabled={props.options.length < 2} >
-					{props.options.map((option: string) => (
-						<option key={option} value={option}>{option}</option>
-					))}
-				</Form.Select>
-			}
-		</Card.Header>
-		{props.children && <Card.Body>{props.children}</Card.Body>}
-	</Card>
-}
 
 export interface InputProps {
 	label: string | ReactNode,
@@ -51,12 +38,14 @@ function Input(props: InputProps) {
 		<Col xs="auto" style={{ textAlign: "right", width: "5em" }}>{props.label}</Col>
 		<Col style={{ display: "flex", alignItems: "center" }}>
 			<Form.Control type="number" style={{ width: "100%", paddingRight: unitTextWidth, textAlign: "right" }} value={props.value} onChange={handleChange}></Form.Control>
-		<span style={{ position: "absolute", right: 30, color: "#888" }}>{unit}</span>
-	</Col>
+			<span style={{ position: "absolute", right: 30, color: "#888" }}>{unit}</span>
+		</Col>
 	</Row >
 }
 
 export default function RechteckQS() {
+	const [beton, setBeton] = useState(BetonList[0]);
+
 	// Baustahl input
 	const [A_s1, set_A_s1] = useState(20.0);
 	const [A_s2, set_A_s2] = useState(20.0);
@@ -64,6 +53,7 @@ export default function RechteckQS() {
 	const [d_2, set_d_2] = useState(5.0);
 
 	// Spannstahl input
+	const [stahl, setStahl] = useState(StahlList[0]);
 	const [E_p, set_E_p] = useState(19500.0);
 	const [A_p, set_A_p] = useState(20.0);
 	const [d_p, set_d_p] = useState(20.0);
@@ -87,16 +77,16 @@ export default function RechteckQS() {
 			<Row className="justify-content-md-center">
 				<Col xs={{ order: 2, span: 12 }} md={{ order: 1, span: 6 }} lg={{ order: 1, span: 4 }} xl={{ order: 1, span: 3 }}>
 
-					<InputCard header="Beton" options={["C12/15", "C15/20", "C20/25", "C25/30", "C30/37"]} />
+					<InputCard header="Beton" options={BetonList} selectionSetter={setBeton} />
 
-					<InputCard header="Baustahl" options={["B500"]}>
+					<InputCard header="Baustahl" options={[{label: "B500"}]}>
 						<Input label={<>A<sub>s1</sub></>} value={A_s1} unit="cm2" setter={set_A_s1} />
 						<Input label={<>A<sub>s2</sub></>} value={A_s2} unit="cm2" setter={set_A_s2} />
 						<Input label={<>d<sub>1</sub></>} value={d_1} unit="cm" setter={set_d_1} />
 						<Input label={<>d<sub>2</sub></>} value={d_2} unit="cm" setter={set_d_2} />
 					</InputCard>
 
-					<InputCard header="Spannstahl" options={["ohne", "St 1375/1570", "St 1470/1670", "St 1570/1770", "St 1660/1860"]}>
+					<InputCard header="Spannstahl" options={StahlList} selectionSetter={setStahl} >
 						<Input label={<>E<sub>p</sub></>} value={E_p} unit="N/mm2" setter={set_E_p} />
 						<Input label={<>A<sub>p</sub></>} value={A_p} unit="cm2" setter={set_A_p} />
 						<Input label={<>d<sub>p</sub></>} value={d_p} unit="cm" setter={set_d_p} />
@@ -110,13 +100,14 @@ export default function RechteckQS() {
 					<InputCard header="Einwirkung">
 						<Input label={<>N<sub>Ed</sub></>} value={N_Ed} unit="kN" setter={set_N_Ed} />
 						<Input label={<>M<sub>Ed</sub></>} value={M_Ed} unit="kNm" setter={set_M_Ed} />
+						<p>&epsilon;<sub>p</sub><sup>(0)</sup></p>
 					</InputCard>
 
 				</Col>
 				<Col xs={{ order: 1, span: 12 }} md={{ order: 2, span: 6 }} lg={{ order: 2, span: 8 }} xl={{ order: 1, span: 9 }}>
 
 					<InputCard header="M-N-Interaktion">
-						<Graph />
+						<Graph beton={beton} stahl={stahl} A_s1={A_s1} A_s2={A_s2} d_1={d_1} d_2={d_2} E_p={E_p} A_p={A_p} d_p={d_p} b={b} h={h} N_Ed={N_Ed} M_Ed={M_Ed} />
 					</InputCard>
 
 					<InputCard header="Widerstand">
@@ -126,6 +117,10 @@ export default function RechteckQS() {
 						<p>
 							M<sub>Rd</sub> = 1698.1 kNm
 						</p>
+						<p>&epsilon;<sub>c</sub></p>
+						<p>&epsilon;<sub>s1</sub></p>
+						<p>&epsilon;<sub>s2</sub></p>
+						<p>&epsilon;<sub>p</sub></p>
 					</InputCard>
 
 				</Col>

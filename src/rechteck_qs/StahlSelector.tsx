@@ -1,14 +1,14 @@
-import { MenuItem, TextField } from '@mui/material';
-import React from 'react';
+import { SelectionOption } from "./InputCard"
 
 
-type Stahl = {
+export interface Stahl extends SelectionOption {
 	label: string
 	f_p01k: number
 	f_pk: number
 }
 
-const StahlList: Array<Stahl> = [
+
+export const StahlList: Stahl[] = [
 	{
 		label: "St 1375/1570",
 		f_p01k: 1360,
@@ -25,26 +25,3 @@ const StahlList: Array<Stahl> = [
 		f_pk: 1770
 	}
 ]
-
-
-export default function BetonSelector() {
-	const [beton, setBeton] = React.useState(StahlList[0].label);
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setBeton(event.target.value);
-	};
-	return <TextField
-		id="outlined-select-beton"
-		select
-		value={beton}
-		fullWidth={true}
-		onChange={handleChange}
-		size="small"
-		// variant="standard"
-	>
-		{StahlList.map((option: Stahl) => (
-			<MenuItem key={option.label} value={option.label}>
-				{option.label}
-			</MenuItem>
-		))}
-	</TextField>
-}
