@@ -1,4 +1,5 @@
-import { Card, Col, Container, Dropdown, DropdownButton, Form, Navbar, Row } from 'react-bootstrap';
+import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
+import { Card, Col, Container, Form, Navbar, Row } from 'react-bootstrap';
 import Graph from './Graph';
 
 
@@ -18,32 +19,63 @@ function InputCard(props: any) {
 	</Card>
 }
 
-function Input(props: any) {
-	let unit = props.unit;
-	let unitTextWidth = props.unit?.length;
-	if (props.unit == "cm") {
+export interface InputProps {
+	label: string | ReactNode,
+	value: number,
+	unit: string,
+	setter: Dispatch<SetStateAction<number>>
+}
+
+function Input(props: InputProps) {
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		props.setter(parseFloat(event.target.value))
+	};
+
+	let unit = <>{props.unit}</>;
+	let unitTextWidth = props.unit?.length + "em";
+	if (props.unit === "cm") {
 		unitTextWidth = "2.5em";
-	} else if (props.unit == "kN") {
+	} else if (props.unit === "kN") {
 		unitTextWidth = "2.3em";
-	} else if (props.unit == "kNm") {
+	} else if (props.unit === "kNm") {
 		unitTextWidth = "3.3em";
-	} else if (props.unit == "cm2") {
+	} else if (props.unit === "cm2") {
 		unit = <>cm<sup>2</sup></>
 		unitTextWidth = "3em";
-	} else if (props.unit == "N/mm2") {
+	} else if (props.unit === "N/mm2") {
 		unit = <>N/mm<sup>2</sup></>
 		unitTextWidth = "4.5em";
 	}
+
 	return <Row style={{ alignItems: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
 		<Col xs="auto" style={{ textAlign: "right", width: "5em" }}>{props.label}</Col>
 		<Col style={{ display: "flex", alignItems: "center" }}>
-			<Form.Control type="number" style={{ width: "100%", paddingRight: unitTextWidth, textAlign: "right" }} value={props.default}></Form.Control>
-			<span style={{ position: "absolute", right: 30, color: "#888" }}>{unit}</span>
-		</Col>
-	</Row>
+			<Form.Control type="number" style={{ width: "100%", paddingRight: unitTextWidth, textAlign: "right" }} value={props.value} onChange={handleChange}></Form.Control>
+		<span style={{ position: "absolute", right: 30, color: "#888" }}>{unit}</span>
+	</Col>
+	</Row >
 }
 
 export default function RechteckQS() {
+	// Baustahl input
+	const [A_s1, set_A_s1] = useState(20.0);
+	const [A_s2, set_A_s2] = useState(20.0);
+	const [d_1, set_d_1] = useState(5.0);
+	const [d_2, set_d_2] = useState(5.0);
+
+	// Spannstahl input
+	const [E_p, set_E_p] = useState(19500.0);
+	const [A_p, set_A_p] = useState(20.0);
+	const [d_p, set_d_p] = useState(20.0);
+
+	// Querschnitt input
+	const [b, set_b] = useState(20.0);
+	const [h, set_h] = useState(20.0);
+
+	// Einwirkung input
+	const [N_Ed, set_N_Ed] = useState(20.0);
+	const [M_Ed, set_M_Ed] = useState(20.0);
+
 	return <>
 		<Navbar bg="light" expand="lg">
 			<Container>
@@ -58,26 +90,26 @@ export default function RechteckQS() {
 					<InputCard header="Beton" options={["C12/15", "C15/20", "C20/25", "C25/30", "C30/37"]} />
 
 					<InputCard header="Baustahl" options={["B500"]}>
-						<Input label={<>A<sub>s1</sub></>} default="20.0" unit="cm2" />
-						<Input label={<>A<sub>s2</sub></>} default="0.0" unit="cm2" />
-						<Input label={<>d<sub>1</sub></>} default="5.0" unit="cm" />
-						<Input label={<>d<sub>2</sub></>} default="5.0" unit="cm" />
+						<Input label={<>A<sub>s1</sub></>} value={A_s1} unit="cm2" setter={set_A_s1} />
+						<Input label={<>A<sub>s2</sub></>} value={A_s2} unit="cm2" setter={set_A_s2} />
+						<Input label={<>d<sub>1</sub></>} value={d_1} unit="cm" setter={set_d_1} />
+						<Input label={<>d<sub>2</sub></>} value={d_2} unit="cm" setter={set_d_2} />
 					</InputCard>
 
-					<InputCard header="Spannstahl" options={["St 1375/1570", "St 1470/1670", "St 1570/1770", "St 1660/1860"]}>
-						<Input label={<>E<sub>p</sub></>} default="19500" unit="N/mm2" />
-						<Input label={<>A<sub>p</sub></>} default="10.0" unit="cm2" />
-						<Input label={<>d<sub>p</sub></>} default="10.0" unit="cm" />
+					<InputCard header="Spannstahl" options={["ohne", "St 1375/1570", "St 1470/1670", "St 1570/1770", "St 1660/1860"]}>
+						<Input label={<>E<sub>p</sub></>} value={E_p} unit="N/mm2" setter={set_E_p} />
+						<Input label={<>A<sub>p</sub></>} value={A_p} unit="cm2" setter={set_A_p} />
+						<Input label={<>d<sub>p</sub></>} value={d_p} unit="cm" setter={set_d_p} />
 					</InputCard>
 
 					<InputCard header="Querschnitt">
-						<Input label="Breite b" default="50" unit="cm" />
-						<Input label="Höhe h" default="100" unit="cm" />
+						<Input label="Breite b" value={b} unit="cm" setter={set_b} />
+						<Input label="Höhe h" value={h} unit="cm" setter={set_h} />
 					</InputCard>
 
 					<InputCard header="Einwirkung">
-						<Input label={<>N<sub>Ed</sub></>} default="1000.0" unit="kN" />
-						<Input label={<>M<sub>Ed</sub></>} default="1500.0" unit="kNm" />
+						<Input label={<>N<sub>Ed</sub></>} value={N_Ed} unit="kN" setter={set_N_Ed} />
+						<Input label={<>M<sub>Ed</sub></>} value={M_Ed} unit="kNm" setter={set_M_Ed} />
 					</InputCard>
 
 				</Col>
