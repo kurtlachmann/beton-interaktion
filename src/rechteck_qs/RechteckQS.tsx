@@ -85,7 +85,7 @@ export default function RechteckQS() {
 
 		<Container style={{ marginBottom: "1em" }}>
 			<Row className="justify-content-md-center">
-				<Col xs={{ order: 2, span: 12 }} md={{ order: 1, span: 4 }} lg={{ order: 1, span: 3 }}>
+				<Col xs={{ order: 2, span: 12 }} md={{ order: 1, span: 6 }} lg={{ order: 1, span: 4 }} xl={{ order: 1, span: 3 }}>
 
 					<InputCard header="Beton" options={["C12/15", "C15/20", "C20/25", "C25/30", "C30/37"]} />
 
@@ -113,7 +113,7 @@ export default function RechteckQS() {
 					</InputCard>
 
 				</Col>
-				<Col xs={{ order: 1, span: 12 }} md={{ order: 2, span: 8 }} lg={{ order: 2, span: 9 }}>
+				<Col xs={{ order: 1, span: 12 }} md={{ order: 2, span: 6 }} lg={{ order: 2, span: 8 }} xl={{ order: 1, span: 9 }}>
 
 					<InputCard header="M-N-Interaktion">
 						<Graph />
