@@ -19,9 +19,27 @@ function InputCard(props: any) {
 }
 
 function Input(props: any) {
+	let unit = props.unit;
+	let unitTextWidth = props.unit?.length;
+	if (props.unit == "cm") {
+		unitTextWidth = "2.5em";
+	} else if (props.unit == "kN") {
+		unitTextWidth = "2.3em";
+	} else if (props.unit == "kNm") {
+		unitTextWidth = "3.3em";
+	} else if (props.unit == "cm2") {
+		unit = <>cm<sup>2</sup></>
+		unitTextWidth = "3em";
+	} else if (props.unit == "N/mm2") {
+		unit = <>N/mm<sup>2</sup></>
+		unitTextWidth = "4.5em";
+	}
 	return <Row style={{ alignItems: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
 		<Col xs="auto" style={{ textAlign: "right", width: "5em" }}>{props.label}</Col>
-		<Col><Form.Control type="number"></Form.Control></Col>
+		<Col style={{ display: "flex", alignItems: "center" }}>
+			<Form.Control type="number" style={{ width: "100%", paddingRight: unitTextWidth, textAlign: "right" }} value={props.default}></Form.Control>
+			<span style={{ position: "absolute", right: 30, color: "#888" }}>{unit}</span>
+		</Col>
 	</Row>
 }
 
@@ -40,22 +58,26 @@ export default function RechteckQS() {
 					<InputCard header="Beton" options={["C12/15", "C15/20", "C20/25", "C25/30", "C30/37"]} />
 
 					<InputCard header="Baustahl" options={["B500"]}>
-						<Input label={<>A<sub>s1</sub></>} />
-						<Input label={<>A<sub>s2</sub></>} />
-						<Input label={<>d<sub>1</sub></>} />
-						<Input label={<>d<sub>2</sub></>} />
+						<Input label={<>A<sub>s1</sub></>} default="20.0" unit="cm2" />
+						<Input label={<>A<sub>s2</sub></>} default="0.0" unit="cm2" />
+						<Input label={<>d<sub>1</sub></>} default="5.0" unit="cm" />
+						<Input label={<>d<sub>2</sub></>} default="5.0" unit="cm" />
 					</InputCard>
 
 					<InputCard header="Spannstahl" options={["St 1375/1570", "St 1470/1670", "St 1570/1770", "St 1660/1860"]}>
-						<Input label={<>E<sub>p</sub></>} />
-						<Input label={<>A<sub>p</sub></>} />
-						<Input label={<>d<sub>p</sub></>} />
+						<Input label={<>E<sub>p</sub></>} default="19500" unit="N/mm2" />
+						<Input label={<>A<sub>p</sub></>} default="10.0" unit="cm2" />
+						<Input label={<>d<sub>p</sub></>} default="10.0" unit="cm" />
 					</InputCard>
 
 					<InputCard header="Querschnitt">
-						<Input label="Breite b" />
-						<Input label="Höhe h" />
+						<Input label="Breite b" default="50" unit="cm" />
+						<Input label="Höhe h" default="100" unit="cm" />
+					</InputCard>
 
+					<InputCard header="Einwirkung">
+						<Input label={<>N<sub>Ed</sub></>} default="1000.0" unit="kN" />
+						<Input label={<>M<sub>Ed</sub></>} default="1500.0" unit="kNm" />
 					</InputCard>
 
 				</Col>
