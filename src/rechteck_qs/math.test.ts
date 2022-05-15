@@ -1,7 +1,7 @@
-import { BaustahlList } from "./Baustahl";
-import { BetonList } from "./Beton";
+import { b500 } from "./Baustahl";
+import { c2025 } from "./Beton";
 import { BaustahlConfig, calc, calc2, Einwirkung, Querschnitt, SpannstahlConfig } from "./math";
-import { SpannstahlList } from "./Spannstahl";
+import { st1375 } from "./Spannstahl";
 
 
 test.each([
@@ -17,20 +17,20 @@ test.each([
 	// [25, 25, -2052, 636],
 ])('calc(e_c: %i, e_s: %i)', (e_c, e_s, expected_N_Rd, expected_M_Rd) => {
 	// ARRANGE
-	let beton = BetonList[2];
+	let beton = c2025;
 	let qs: Querschnitt = {
 		b: 50,
 		h: 100
 	}
 	let baustahl: BaustahlConfig = {
-		material: BaustahlList[0],
+		material: b500,
 		A_s1: 15,
 		A_s2: 5,
 		d_1: 10,
 		d_2: 5,
 	}
 	let spannstahl: SpannstahlConfig = {
-		material: SpannstahlList[0],
+		material: st1375,
 		E_p: 195000,
 		A_p: 10,
 		d_p: 10
@@ -60,20 +60,20 @@ test.each([
 	[-3.5, 0, 4592.434, -550.650],
 ])('calc2(e_c: %i, e_s: %i)', (e_c, e_s, expected_N_Rd, expected_M_Rd) => {
 	// ARRANGE
-	let beton = BetonList[2];
+	let beton = c2025;
 	let qs: Querschnitt = {
 		b: 50,
 		h: 100
 	}
 	let baustahl: BaustahlConfig = {
-		material: BaustahlList[0],
+		material: b500,
 		A_s1: 15,
 		A_s2: 5,
 		d_1: 10,
 		d_2: 5,
 	}
 	let spannstahl: SpannstahlConfig = {
-		material: SpannstahlList[0],
+		material: st1375,
 		E_p: 195000,
 		A_p: 10,
 		d_p: 10

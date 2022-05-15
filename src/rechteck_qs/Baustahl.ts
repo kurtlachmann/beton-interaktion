@@ -16,6 +16,8 @@ export class Baustahl implements SelectionOption {
 }
 
 
+export const b500 = new Baustahl("B500", 50.0, 20000);
+
 export const BaustahlList: Baustahl[] = [
-	new Baustahl("B500", 50.0, 20000),
+	b500
 ]
