@@ -1,9 +1,9 @@
 import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 import { Col, Container, Form, Navbar, Row } from 'react-bootstrap';
-import { BetonList } from './BetonSelector';
+import { BetonList } from './Beton';
 import Graph from './Graph';
 import InputCard from './InputCard';
-import { StahlList } from './StahlSelector';
+import { SpannstahlList } from './Spannstahl';
 
 
 export interface InputProps {
@@ -44,27 +44,27 @@ function Input(props: InputProps) {
 }
 
 export default function RechteckQS() {
-	const [beton, setBeton] = useState(BetonList[0]);
+	const [beton, setBeton] = useState(BetonList[2]);
 
 	// Baustahl input
-	const [A_s1, set_A_s1] = useState(20.0);
-	const [A_s2, set_A_s2] = useState(20.0);
-	const [d_1, set_d_1] = useState(5.0);
+	const [A_s1, set_A_s1] = useState(15.0);
+	const [A_s2, set_A_s2] = useState(5.0);
+	const [d_1, set_d_1] = useState(10.0);
 	const [d_2, set_d_2] = useState(5.0);
 
 	// Spannstahl input
-	const [stahl, setStahl] = useState(StahlList[0]);
-	const [E_p, set_E_p] = useState(19500.0);
-	const [A_p, set_A_p] = useState(20.0);
-	const [d_p, set_d_p] = useState(20.0);
+	const [stahl, setStahl] = useState(SpannstahlList[0]);
+	const [E_p, set_E_p] = useState(195000.0);
+	const [A_p, set_A_p] = useState(10.0);
+	const [d_p, set_d_p] = useState(10.0);
 
 	// Querschnitt input
-	const [b, set_b] = useState(20.0);
-	const [h, set_h] = useState(20.0);
+	const [b, set_b] = useState(50.0);
+	const [h, set_h] = useState(100.0);
 
 	// Einwirkung input
-	const [N_Ed, set_N_Ed] = useState(20.0);
-	const [M_Ed, set_M_Ed] = useState(20.0);
+	const [N_Ed, set_N_Ed] = useState(1000.0);
+	const [M_Ed, set_M_Ed] = useState(1500.0);
 
 	return <>
 		<Navbar bg="light" expand="lg">
@@ -86,7 +86,7 @@ export default function RechteckQS() {
 						<Input label={<>d<sub>2</sub></>} value={d_2} unit="cm" setter={set_d_2} />
 					</InputCard>
 
-					<InputCard header="Spannstahl" options={StahlList} selectionSetter={setStahl} >
+					<InputCard header="Spannstahl" options={SpannstahlList} selectionSetter={setStahl} >
 						<Input label={<>E<sub>p</sub></>} value={E_p} unit="N/mm2" setter={set_E_p} />
 						<Input label={<>A<sub>p</sub></>} value={A_p} unit="cm2" setter={set_A_p} />
 						<Input label={<>d<sub>p</sub></>} value={d_p} unit="cm" setter={set_d_p} />
@@ -107,7 +107,7 @@ export default function RechteckQS() {
 				<Col xs={{ order: 1, span: 12 }} md={{ order: 2, span: 6 }} lg={{ order: 2, span: 8 }} xl={{ order: 1, span: 9 }}>
 
 					<InputCard header="M-N-Interaktion">
-						<Graph beton={beton} stahl={stahl} A_s1={A_s1} A_s2={A_s2} d_1={d_1} d_2={d_2} E_p={E_p} A_p={A_p} d_p={d_p} b={b} h={h} N_Ed={N_Ed} M_Ed={M_Ed} />
+						<Graph beton={beton} spannstahl={stahl} A_s1={A_s1} A_s2={A_s2} d_1={d_1} d_2={d_2} E_p={E_p} A_p={A_p} d_p={d_p} b={b} h={h} N_Ed={N_Ed} M_Ed={M_Ed} />
 					</InputCard>
 
 					<InputCard header="Widerstand">
