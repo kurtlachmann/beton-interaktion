@@ -81,19 +81,19 @@ function calcData(props: GraphProps) {
 
 	e_c = -3.5;
 	e_s = 25;
-	for (; e_c < 0; e_c += 0.1) {  // TODO e_c = 0 bis 25 ist komisch
+	for (; e_c < 25; e_c += 0.1) {  // TODO e_c = 0 bis 25 ist komisch
 		let { N_Rd, M_Rd } = calc(e_c, e_s, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
 		data_points.push([M_Rd, N_Rd])
 		console.log("e_c", e_c, "e_s", e_s, M_Rd, N_Rd);
 	}
 
-	// e_c = 0;
-	// e_s = 25;
-	// for (; e_c > -3.5; e_c -= 0.1) {
-	// 	let { N_Rd, M_Rd } = calc2(e_c, e_s, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung);
-	// 	data_points.push([M_Rd, N_Rd]);
-	// 	console.log("e_c", e_c, "e_s", e_s, M_Rd, N_Rd);
-	// }
+	e_c = 25;
+	e_s = 25;
+	for (; e_c > -3.5; e_c -= 0.1) {
+		let { N_Rd, M_Rd } = calc2(e_c, e_s, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung);
+		data_points.push([M_Rd, N_Rd]);
+		console.log("e_c", e_c, "e_s", e_s, M_Rd, N_Rd);
+	}
 
 	e_c = -3.5;
 	e_s = 25;

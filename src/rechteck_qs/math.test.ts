@@ -12,9 +12,8 @@ test.each([
 	[-3.5, 20, -1008.164, 1102.351],
 	[-3.5, 25, -1141.755, 1047.815],
 
-	// [0, 25, -1974.0, 671.0],  // Different results because the Excel sheet diverges from the algorithm. WHY?
-	// [24, 25, -2052, 636],
-	// [25, 25, -2052, 636],
+	[0, 25, -1973.671, 671.413],
+	[25, 25, -2052.173, 636.086],
 ])('calc(e_c: %i, e_s: %i)', (e_c, e_s, expected_N_Rd, expected_M_Rd) => {
 	// ARRANGE
 	let beton = c2025;
@@ -50,8 +49,8 @@ test.each([
 
 
 test.each([
-	// [0, 25, -2052, 636],  // Different results because the Excel sheet diverges from the algorithm. WHY?
-	// [-1, 25, -1835, 542],
+	[0, 25, -2052.173, 636.086],
+	[-1, 25, -1834.781, 541.606],
 
 	[-2, 25, -1368.389, 343.004],
 	[-3.5, 25, -447.101, -33.488],

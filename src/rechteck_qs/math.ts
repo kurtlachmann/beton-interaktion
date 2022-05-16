@@ -29,17 +29,41 @@ export interface Einwirkung {
 }
 
 
+function get_p(e_c: number, e_s: number) {
+	let p;
+	if (e_c == e_s) {
+		if (e_c < 0) {
+			p = 1.0;
+		} else {
+			p = 0.0;
+		}
+	} else {
+		p = e_c / (e_c - e_s);
+	}
+	return Math.min(Math.max(p, 0.0), 1.0);
+}
+
+
+function get_k(e_c: number, e_s: number, beton: Beton) {
+	let k;
+	if (e_c == e_s) {
+		if (e_c < 0) {
+			k = 1.0;
+		} else {
+			k = 0.0;
+		}
+	} else {
+		k = (e_c - beton.e_c2) / (e_c - e_s);
+	}
+	return Math.min(Math.max(k, 0.0), 1.0);
+}
+
+
 export function calc(e_c: number, e_s: number, qs: Querschnitt, beton: Beton, baustahl: BaustahlConfig, spannstahl: SpannstahlConfig, einwirkung: Einwirkung) {
 	let ref = qs.h - baustahl.d_1;
 
-	let p, k;
-	if (e_c == e_s) {
-		p = 1.0
-		k = 1.0;
-	} else {
-		p = e_c / (e_c - e_s);
-		k = (e_c - beton.e_c2) / (e_c - e_s);
-	}
+	let p = get_p(e_c, e_s)
+	let k = get_k(e_c, e_s, beton);
 
 	let alpha = -(((e_c - e_s) ** 2) / (3 * (beton.e_c2 ** 2)));
 	let beta = (((e_c ** 2) - (e_c * e_s)) / (beton.e_c2 ** 2)) - ((e_c - e_s) / beton.e_c2);
@@ -49,6 +73,10 @@ export function calc(e_c: number, e_s: number, qs: Querschnitt, beton: Beton, ba
 	// Beton
 	let beton_Fc = qs.b * beton.f_cd * 0.1 * ref * XXX
 	let beton_x_s = (qs.h / 2.0) - (qs.b * beton.f_cd * 0.1 * ref ** 2 * (0.75 * alpha * (p ** 4 - k ** 4) + (2.0 / 3.0) * beta * (p ** 3 - k ** 3) + 0.5 * gamma * (p ** 2 - k ** 2) + 0.5 * k ** 2) / beton_Fc)
+	if (isNaN(beton_x_s)) {
+		// Falls alpha/beta/gamma 0 sind tritt hier sonst eine Division 0/0 auf
+		beton_x_s = 0.0;
+	}
 
 	// Bewehrung unten
 	let bewehrung_unten_e_s1 = e_c - ((e_c - e_s) / ref) * (qs.h - baustahl.d_1)
@@ -148,14 +176,8 @@ export function calc(e_c: number, e_s: number, qs: Querschnitt, beton: Beton, ba
 export function calc2(e_c: number, e_s: number, qs: Querschnitt, beton: Beton, baustahl: BaustahlConfig, spannstahl: SpannstahlConfig, einwirkung: Einwirkung) {
 	let ref = qs.h - baustahl.d_2;
 
-	let p, k;
-	if (e_c == e_s) {
-		p = 1.0
-		k = 1.0;
-	} else {
-		p = e_c / (e_c - e_s);
-		k = (e_c - beton.e_c2) / (e_c - e_s);
-	}
+	let p = get_p(e_c, e_s)
+	let k = get_k(e_c, e_s, beton);
 
 	let alpha = -(((e_c - e_s) ** 2) / (3 * (beton.e_c2 ** 2)));
 	let beta = (((e_c ** 2) - (e_c * e_s)) / (beton.e_c2 ** 2)) - ((e_c - e_s) / beton.e_c2);
@@ -163,8 +185,11 @@ export function calc2(e_c: number, e_s: number, qs: Querschnitt, beton: Beton, b
 	const XXX = (alpha * ((p ** 3) - (k ** 3))) + (beta * ((p ** 2) - (k ** 2))) + (gamma * (p - k)) + k;  // TODO what's this variable called?
 
 	// Beton
-	let beton_Fc = qs.b * beton.f_cd * 0.1 * ref * XXX
-	let beton_x_s = (qs.h / 2.0) - (qs.b * beton.f_cd * 0.1 * ref ** 2 * (0.75 * alpha * (p ** 4 - k ** 4) + (2.0 / 3.0) * beta * (p ** 3 - k ** 3) + 0.5 * gamma * (p ** 2 - k ** 2) + 0.5 * k ** 2) / beton_Fc)
+	let beton_Fc = qs.b * beton.f_cd * 0.1 * ref * XXX;
+	let beton_x_s = (qs.h / 2.0) - (qs.b * beton.f_cd * 0.1 * ref ** 2 * (0.75 * alpha * (p ** 4 - k ** 4) + (2.0 / 3.0) * beta * (p ** 3 - k ** 3) + 0.5 * gamma * (p ** 2 - k ** 2) + 0.5 * k ** 2) / beton_Fc);
+	if (isNaN(beton_x_s)) {
+		beton_x_s = 0.0;
+	}
 
 	// Bewehrung unten
 	let bewehrung_unten_e_s1 = e_c - ((e_c - e_s) / ref) * (qs.h - baustahl.d_2)
