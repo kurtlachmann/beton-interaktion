@@ -24,7 +24,7 @@ export interface BaustahlConfig {
 
 export interface SpannstahlConfig {
 	material: Spannstahl
-	E_p: 195000 | 205000
+	E_p: number
 	A_p: number
 	d_p: number
 }

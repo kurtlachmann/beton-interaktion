@@ -59,7 +59,7 @@ function calcData(props: GraphProps) {
 	};
 	let spannstahlConfig: SpannstahlConfig = {
 		material: props.spannstahl,
-		E_p: 195000,  // TODO make this assignable
+		E_p: props.E_p,
 		A_p: props.A_p,
 		d_p: props.d_p,
 	};

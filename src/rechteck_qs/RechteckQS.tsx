@@ -2,7 +2,7 @@ import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 import { Col, Container, Form, Navbar, Row } from 'react-bootstrap';
 import { BetonList } from './Beton';
 import Graph from './Graph';
-import InputCard from './InputCard';
+import InputCard, { SelectionOption } from './InputCard';
 import { SpannstahlList } from './Spannstahl';
 
 
@@ -28,7 +28,7 @@ function Input(props: InputProps) {
 		unitTextWidth = "3.3em";
 	} else if (props.unit === "cm2") {
 		unit = <>cm<sup>2</sup></>
-		unitTextWidth = "3em";
+		unitTextWidth = "2.9em";
 	} else if (props.unit === "N/mm2") {
 		unit = <>N/mm<sup>2</sup></>
 		unitTextWidth = "4.5em";
@@ -38,13 +38,51 @@ function Input(props: InputProps) {
 		<Col xs="auto" style={{ textAlign: "right", width: "5em" }}>{props.label}</Col>
 		<Col style={{ display: "flex", alignItems: "center" }}>
 			<Form.Control type="number" style={{ width: "100%", paddingRight: unitTextWidth, textAlign: "right" }} value={props.value} onChange={handleChange}></Form.Control>
-			<span style={{ position: "absolute", right: 30, color: "#888" }}>{unit}</span>
+			<span style={{ position: "absolute", right: 30, color: "#888", pointerEvents: "none" }}>{unit}</span>
 		</Col>
-	</Row >
+	</Row>
 }
 
+
+function DropDown(props: any) {
+	const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+		props.setter(props.options[event.target.selectedIndex])
+	};
+
+	let unit = <>{props.unit}</>;
+	let unitTextWidth = props.unit?.length + "em";
+	if (props.unit === "cm") {
+		unitTextWidth = "3.8em";
+	} else if (props.unit === "kN") {
+		unitTextWidth = "3.6em";
+	} else if (props.unit === "kNm") {
+		unitTextWidth = "4.6em";
+	} else if (props.unit === "cm2") {
+		unit = <>cm<sup>2</sup></>
+		unitTextWidth = "4.2em";
+	} else if (props.unit === "N/mm2") {
+		unit = <>N/mm<sup>2</sup></>
+		unitTextWidth = "5.7em";
+	}
+
+	return <Row style={{ alignItems: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
+		<Col xs="auto" style={{ textAlign: "right", width: "5em" }}>{props.label}</Col>
+		<Col style={{ display: "flex", alignItems: "center" }}>
+			<Form.Select style={{ width: "100%", paddingRight: unitTextWidth, textAlign: "right" }} value={props.value} onChange={handleChange}>
+				{props.options.map((option: string | number) => (
+					<option key={option} value={option}>{option}</option>
+				))}
+			</Form.Select>
+			<span style={{ position: "absolute", right: 50, color: "#888", pointerEvents: "none" }}>
+				{unit}
+			</span>
+		</Col>
+	</Row>
+}
+
+
 export default function RechteckQS() {
-	const [beton, setBeton] = useState(BetonList[2]);
+	const [beton, setBeton] = useState(BetonList[0]);
 
 	// Baustahl input
 	const [A_s1, set_A_s1] = useState(15.0);
@@ -87,7 +125,7 @@ export default function RechteckQS() {
 					</InputCard>
 
 					<InputCard header="Spannstahl" options={SpannstahlList} selectionSetter={setStahl} >
-						<Input label={<>E<sub>p</sub></>} value={E_p} unit="N/mm2" setter={set_E_p} />
+						<DropDown label={<>E<sub>p</sub></>} options={[195000, 205000]} unit="N/mm2" setter={set_E_p} />
 						<Input label={<>A<sub>p</sub></>} value={A_p} unit="cm2" setter={set_A_p} />
 						<Input label={<>d<sub>p</sub></>} value={d_p} unit="cm" setter={set_d_p} />
 					</InputCard>
