@@ -3,6 +3,12 @@ import { Beton } from "./Beton";
 import { Spannstahl } from "./Spannstahl";
 
 
+export enum RefType {
+	H,
+	D
+}
+
+
 export interface Querschnitt {
 	b: number
 	h: number
@@ -31,7 +37,7 @@ export interface Einwirkung {
 
 function get_p(e_c: number, e_s: number): number {
 	let p;
-	if (e_c == e_s) {
+	if (e_c === e_s) {
 		if (e_c < 0) {
 			p = 1.0;
 		} else {
@@ -46,7 +52,7 @@ function get_p(e_c: number, e_s: number): number {
 
 function get_k(e_c: number, e_s: number, beton: Beton): number {
 	let k;
-	if (e_c == e_s) {
+	if (e_c === e_s) {
 		if (e_c < 0) {
 			k = 1.0;
 		} else {
@@ -79,8 +85,8 @@ function get_beton_F_and_x(e_c: number, e_s: number, ref: number, qs: Querschnit
 }
 
 
-export function calc(e_c: number, e_s: number, qs: Querschnitt, beton: Beton, baustahl: BaustahlConfig, spannstahl: SpannstahlConfig, einwirkung: Einwirkung) {
-	let ref = qs.h - baustahl.d_1;
+export function calc(e_c: number, e_s: number, refType: RefType, qs: Querschnitt, beton: Beton, baustahl: BaustahlConfig, spannstahl: SpannstahlConfig, einwirkung: Einwirkung) {
+	let ref = refType === RefType.H ? qs.h : qs.h - baustahl.d_1;
 
 	// Beton
 	let [beton_Fc, beton_x_s] = get_beton_F_and_x(e_c, e_s, ref, qs, beton);
@@ -165,7 +171,7 @@ export function calc(e_c: number, e_s: number, qs: Querschnitt, beton: Beton, ba
 		if (spannstahl_de_p < beton.e_c2) {
 			spannstahl_dF_c = beton.f_cd * 0.1;
 		} else {
-			spannstahl_dF_c = beton.f_cd * 0.1 * (1 - (1 - spannstahl_de_p / beton.e_c2)) ** 2;
+			spannstahl_dF_c = beton.f_cd * 0.1 * (1 - (1 - (spannstahl_de_p / beton.e_c2)) ** 2);
 		}
 	}
 	spannstahl_dF_c *= spannstahl.A_p;
@@ -180,8 +186,8 @@ export function calc(e_c: number, e_s: number, qs: Querschnitt, beton: Beton, ba
 }
 
 
-export function calc2(e_c: number, e_s: number, qs: Querschnitt, beton: Beton, baustahl: BaustahlConfig, spannstahl: SpannstahlConfig, einwirkung: Einwirkung) {
-	let ref = qs.h - baustahl.d_2;
+export function calc2(e_c: number, e_s: number, refType: RefType, qs: Querschnitt, beton: Beton, baustahl: BaustahlConfig, spannstahl: SpannstahlConfig, einwirkung: Einwirkung) {
+	let ref = refType === RefType.H ? qs.h : qs.h - baustahl.d_2;
 
 	// Beton
 	let [beton_Fc, beton_x_s] = get_beton_F_and_x(e_c, e_s, ref, qs, beton);

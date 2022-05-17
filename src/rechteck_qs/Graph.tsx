@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Chart from "react-apexcharts";
 import { Beton } from "./Beton";
 import { Spannstahl } from "./Spannstahl";
-import { BaustahlConfig, calc, calc2, Einwirkung, Querschnitt, SpannstahlConfig } from "./math";
+import { BaustahlConfig, calc, calc2, Einwirkung, Querschnitt, RefType, SpannstahlConfig } from "./math";
 import { BaustahlList } from "./Baustahl";
 
 
@@ -71,37 +71,45 @@ function calcData(props: GraphProps) {
 	let data_points = [];
 	let e_c, e_s;
 
+	[[-2, -2], [-2.5, -1.33], [-3.0, -0.67], [-3.5, 0]].forEach(element => {
+		let [ e_c, e_s ] = element
+		let { N_Rd, M_Rd } = calc(e_c, e_s, RefType.H, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
+		data_points.push([M_Rd, N_Rd])
+	});
+
 	e_c = -3.5;
 	e_s = 0;
 	for (; e_s < 25; e_s += 0.1) {
-		let { N_Rd, M_Rd } = calc(e_c, e_s, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
+		let { N_Rd, M_Rd } = calc(e_c, e_s, RefType.D, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
 		data_points.push([M_Rd, N_Rd])
-		console.log("e_c", e_c, "e_s", e_s, M_Rd, N_Rd);
 	}
 
 	e_c = -3.5;
 	e_s = 25;
 	for (; e_c < 25; e_c += 0.1) {  // TODO e_c = 0 bis 25 ist komisch
-		let { N_Rd, M_Rd } = calc(e_c, e_s, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
+		let { N_Rd, M_Rd } = calc(e_c, e_s, RefType.D, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
 		data_points.push([M_Rd, N_Rd])
-		console.log("e_c", e_c, "e_s", e_s, M_Rd, N_Rd);
 	}
 
 	e_c = 25;
 	e_s = 25;
 	for (; e_c > -3.5; e_c -= 0.1) {
-		let { N_Rd, M_Rd } = calc2(e_c, e_s, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung);
+		let { N_Rd, M_Rd } = calc2(e_c, e_s, RefType.D, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung);
 		data_points.push([M_Rd, N_Rd]);
-		console.log("e_c", e_c, "e_s", e_s, M_Rd, N_Rd);
 	}
 
 	e_c = -3.5;
 	e_s = 25;
 	for (; e_s > 0; e_s -= 0.1) {
-		let { N_Rd, M_Rd } = calc2(e_c, e_s, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung);
+		let { N_Rd, M_Rd } = calc2(e_c, e_s, RefType.D, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung);
 		data_points.push([M_Rd, N_Rd]);
-		console.log("e_c", e_c, "e_s", e_s, M_Rd, N_Rd);
 	}
+
+	[[-3.5, 0], [-3.0, -0.67], [-2.5, -1.33], [-2, -2]].forEach(element => {
+		let [ e_c, e_s ] = element
+		let { N_Rd, M_Rd } = calc2(e_c, e_s, RefType.H, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
+		data_points.push([M_Rd, N_Rd])
+	});
 
 	return data_points;
 }
