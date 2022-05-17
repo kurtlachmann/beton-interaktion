@@ -1,5 +1,4 @@
 import React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
 import Home from './home/Home';
 import RechteckQS from './rechteck_qs/RechteckQS';
@@ -10,7 +9,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <React.Fragment>
-      <CssBaseline />
       <Routes>
         <Route path='/' element={<Home/>} />
         <Route path='/rechteck_qs' element={<RechteckQS/>} />

@@ -1,16 +1,15 @@
-import { Button, Container, Paper, Typography } from '@mui/material';
-import React from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 function Home() {
 	return <>
-		<Container maxWidth="sm">
-			<Paper>
-				<Typography variant="h2">Beton Interaktion</Typography>
-				<Button>
+		<Container style={{ marginTop: "1em" }}>
+			<Row className="justify-content-md-center">
+				<Col xs={12} style={{textAlign: "center"}}>
+					<h1>BETON INTERAKTION</h1>
 					<Link to='/rechteck_qs'>Rechteck Querschnitt</Link>
-				</Button>
-			</Paper>
+				</Col>
+			</Row>
 		</Container>
 	</>
 }
