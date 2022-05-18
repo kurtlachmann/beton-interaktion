@@ -35,7 +35,7 @@ function makeSeries(props: GraphProps) {
 			// data: DUMMY_DATA
 		}, {
 			name: "Ed",
-			data: [[1000, 4000]]
+			data: [[props.M_Ed, props.N_Ed]]
 		}, {
 			name: "Rd",
 			data: [[1287.9, 4000]]
@@ -136,6 +136,26 @@ const graphOptions: ApexOptions = {
 	yaxis: {
 		tickAmount: 5,
 		decimalsInFloat: 0,
+	},
+	annotations: {
+		yaxis: [
+		  {
+			y: 0,
+			strokeDashArray: 0,
+			borderColor: '#888',
+			borderWidth: 1,
+			opacity: 1
+		  }
+		],
+		xaxis: [
+		  {
+			x: 0,
+			strokeDashArray: 0,
+			borderColor: '#888',
+			borderWidth: 1,
+			opacity: 1
+		  }
+		]
 	},
 	tooltip: {
 		intersect: true,
