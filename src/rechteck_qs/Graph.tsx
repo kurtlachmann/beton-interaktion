@@ -136,6 +136,9 @@ const graphOptions: ApexOptions = {
 		},
 		toolbar: {
 			show: false
+		},
+		zoom: {
+			enabled: false,
 		}
 	},
 	xaxis: {
