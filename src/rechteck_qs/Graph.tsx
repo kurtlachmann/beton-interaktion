@@ -27,20 +27,35 @@ export interface GraphProps {
 
 
 function makeSeries(props: GraphProps) {
-	calcData(props);
+	let data_points = calcData(props);
+
+	// Interpolation
+	let [M_bigger, N_smaller] = data_points[0];
+	let [M_smaller, N_bigger] = data_points[1];
+	for (let [M, N] of data_points) {
+		if (N < props.N_Ed) {
+			N_smaller = N;
+			M_bigger = M;
+			break;
+		}
+		N_bigger = N;
+		M_smaller = M;
+	}
+	let diff = (N_smaller - props.N_Ed) / (N_smaller - N_bigger);
+	let M_interpolated = M_bigger - diff * (M_bigger - M_smaller);
+
 	return [
 		{
 			name: "M-N-Interaktion",
-			data: calcData(props)
-			// data: DUMMY_DATA
+			data: data_points
 		}, {
 			name: "Ed",
 			data: [[props.M_Ed, props.N_Ed]]
 		}, {
 			name: "Rd",
-			data: [[1287.9, 4000]]
+			data: [[M_interpolated, props.N_Ed]]
 		}
-	]
+	];
 }
 
 
@@ -132,10 +147,19 @@ const graphOptions: ApexOptions = {
 		max: 2000,
 		tickAmount: 12,
 		decimalsInFloat: 0,
+		title: {
+			text: "Biegemoment M-Rd in [kNm]"
+		},
 	},
 	yaxis: {
 		tickAmount: 5,
 		decimalsInFloat: 0,
+		title: {
+			text: "Normalkraft N-Rd in [kN]"
+		},
+	},
+	stroke: {
+		lineCap: 'round',
 	},
 	annotations: {
 		yaxis: [
@@ -160,6 +184,9 @@ const graphOptions: ApexOptions = {
 	tooltip: {
 		intersect: true,
 		shared: false,
+	},
+	legend: {
+		position: "top",
 	},
 	markers: {
 		// size: 3,
