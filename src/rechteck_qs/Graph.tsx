@@ -59,8 +59,35 @@ function makeSeries(props: GraphProps) {
 }
 
 
+function* getEpsilonSamplePoints(reverse: boolean = false): Generator<[number, number, RefType]> {
+	const stepSize = 0.1;
+	if (!reverse) {
+		yield [-2, -2, RefType.H];
+		yield [-2.5, -1.33, RefType.H];
+		yield [-3.0, -0.67, RefType.H];
+		yield [-3.5, 0, RefType.H];
+		for (let e_s = 0; e_s < 25; e_s += stepSize) {
+			yield [-3.5, e_s, RefType.D];
+		}
+		for (let e_c = -3.5; e_c < 25; e_c += stepSize) {
+			yield [e_c, 25, RefType.D];
+		}
+	} else {
+		for (let e_c = 25; e_c > -3.5; e_c -= stepSize) {
+			yield [e_c, 25, RefType.D];
+		}
+		for (let e_s = 25; e_s > 0; e_s -= stepSize) {
+			yield [-3.5, e_s, RefType.D];
+		}
+		yield [-3.5, 0, RefType.H];
+		yield [-3.0, -0.67, RefType.H];
+		yield [-2.5, -1.33, RefType.H];
+		yield [-2, -2, RefType.H];
+	}
+}
 
-function calcData(props: GraphProps) {
+
+function calcData(props: GraphProps): number[][] {
 	let qs: Querschnitt = {
 		b: props.b,
 		h: props.h
@@ -84,47 +111,14 @@ function calcData(props: GraphProps) {
 	}
 
 	let data_points = [];
-	let e_c, e_s;
-
-	[[-2, -2], [-2.5, -1.33], [-3.0, -0.67], [-3.5, 0]].forEach(element => {
-		let [ e_c, e_s ] = element
-		let { N_Rd, M_Rd } = calc(e_c, e_s, RefType.H, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
-		data_points.push([M_Rd, N_Rd])
-	});
-
-	e_c = -3.5;
-	e_s = 0;
-	for (; e_s < 25; e_s += 0.1) {
-		let { N_Rd, M_Rd } = calc(e_c, e_s, RefType.D, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
+	for (const [e_c, e_s, reftype] of getEpsilonSamplePoints()) {
+		let { N_Rd, M_Rd } = calc(e_c, e_s, reftype, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
 		data_points.push([M_Rd, N_Rd])
 	}
-
-	e_c = -3.5;
-	e_s = 25;
-	for (; e_c < 25; e_c += 0.1) {  // TODO e_c = 0 bis 25 ist komisch
-		let { N_Rd, M_Rd } = calc(e_c, e_s, RefType.D, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
+	for (const [e_c, e_s, reftype] of getEpsilonSamplePoints(true)) {
+		let { N_Rd, M_Rd } = calc2(e_c, e_s, reftype, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
 		data_points.push([M_Rd, N_Rd])
 	}
-
-	e_c = 25;
-	e_s = 25;
-	for (; e_c > -3.5; e_c -= 0.1) {
-		let { N_Rd, M_Rd } = calc2(e_c, e_s, RefType.D, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung);
-		data_points.push([M_Rd, N_Rd]);
-	}
-
-	e_c = -3.5;
-	e_s = 25;
-	for (; e_s > 0; e_s -= 0.1) {
-		let { N_Rd, M_Rd } = calc2(e_c, e_s, RefType.D, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung);
-		data_points.push([M_Rd, N_Rd]);
-	}
-
-	[[-3.5, 0], [-3.0, -0.67], [-2.5, -1.33], [-2, -2]].forEach(element => {
-		let [ e_c, e_s ] = element
-		let { N_Rd, M_Rd } = calc2(e_c, e_s, RefType.H, qs, props.beton, baustahlConfig, spannstahlConfig, einwirkung)
-		data_points.push([M_Rd, N_Rd])
-	});
 
 	return data_points;
 }
