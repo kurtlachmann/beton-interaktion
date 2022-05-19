@@ -104,6 +104,8 @@ export default function RechteckQS() {
 	const [N_Ed, set_N_Ed] = useState(1000.0);
 	const [M_Ed, set_M_Ed] = useState(1500.0);
 
+	const [M_Rd, set_M_Rd] = useState(0);
+
 	return <>
 		<Navbar bg="light" expand="lg">
 			<Container>
@@ -145,15 +147,15 @@ export default function RechteckQS() {
 				<Col xs={{ order: 1, span: 12 }} md={{ order: 2, span: 6 }} lg={{ order: 2, span: 8 }} xl={{ order: 1, span: 9 }}>
 
 					<InputCard header="M-N-Interaktion">
-						<Graph beton={beton} spannstahl={stahl} A_s1={A_s1} A_s2={A_s2} d_1={d_1} d_2={d_2} E_p={E_p} A_p={A_p} d_p={d_p} b={b} h={h} N_Ed={N_Ed} M_Ed={M_Ed} />
+						<Graph beton={beton} spannstahl={stahl} A_s1={A_s1} A_s2={A_s2} d_1={d_1} d_2={d_2} E_p={E_p} A_p={A_p} d_p={d_p} b={b} h={h} N_Ed={N_Ed} M_Ed={M_Ed} set_M_Rd={set_M_Rd} />
 					</InputCard>
 
 					<InputCard header="Widerstand">
 						<p>
-							N<sub>Rd</sub> = 1000.0 kN
+							N<sub>Rd</sub> = {N_Ed.toFixed(1)} kN
 						</p>
 						<p>
-							M<sub>Rd</sub> = 1698.1 kNm
+							M<sub>Rd</sub> = {M_Rd.toFixed(1)} kNm
 						</p>
 						<p>&epsilon;<sub>c</sub></p>
 						<p>&epsilon;<sub>s1</sub></p>
