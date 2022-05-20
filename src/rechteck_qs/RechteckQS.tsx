@@ -1,10 +1,10 @@
 import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 import { Col, Container, Form, Navbar, Row } from 'react-bootstrap';
 import { BetonList } from './Beton';
-import Graph from './Graph';
 import InputCard, { SelectionOption } from './InputCard';
 import { SpannstahlList } from './Spannstahl';
 
+const Graph = React.lazy(() => import('./Graph'));
 
 export interface InputProps {
 	label: string | ReactNode,
@@ -147,7 +147,9 @@ export default function RechteckQS() {
 				<Col xs={{ order: 1, span: 12 }} md={{ order: 2, span: 6 }} lg={{ order: 2, span: 8 }} xl={{ order: 1, span: 9 }}>
 
 					<InputCard header="M-N-Interaktion">
-						<Graph beton={beton} spannstahl={stahl} A_s1={A_s1} A_s2={A_s2} d_1={d_1} d_2={d_2} E_p={E_p} A_p={A_p} d_p={d_p} b={b} h={h} N_Ed={N_Ed} M_Ed={M_Ed} set_M_Rd={set_M_Rd} />
+						<React.Suspense fallback={<div />}>
+							<Graph beton={beton} spannstahl={stahl} A_s1={A_s1} A_s2={A_s2} d_1={d_1} d_2={d_2} E_p={E_p} A_p={A_p} d_p={d_p} b={b} h={h} N_Ed={N_Ed} M_Ed={M_Ed} set_M_Rd={set_M_Rd} />
+						</React.Suspense>
 					</InputCard>
 
 					<InputCard header="Widerstand">
