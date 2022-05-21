@@ -70,28 +70,28 @@ export default function RechteckQS() {
 	const [N_Ed, set_N_Ed] = useState(1000.0);
 	const [M_Ed, set_M_Ed] = useState(1500.0);
 
-	let qs: Querschnitt = {
+	const qs: Querschnitt = {
 		b: b,
 		h: h
 	};
-	let baustahlConfig: BaustahlConfig = {
+	const baustahlConfig: BaustahlConfig = {
 		material: b500,
 		A_s1: A_s1,
 		A_s2: A_s2,
 		d_1: d_1,
 		d_2: d_2
 	};
-	let spannstahlConfig: SpannstahlConfig = {
+	const spannstahlConfig: SpannstahlConfig = {
 		material: stahl,
 		E_p: E_p,
 		A_p: A_p,
 		d_p: d_p,
 	};
-	let einwirkung: Einwirkung = {
+	const einwirkung: Einwirkung = {
 		N_Ed: N_Ed,
 		M_Ed: M_Ed
 	}
-	let {M_Rd, dataPoints} = calcData(qs, beton, baustahlConfig, spannstahlConfig, einwirkung);
+	const {M_Rd, dataPoints} = calcData(qs, beton, baustahlConfig, spannstahlConfig, einwirkung);
 
 	return <>
 		<Navbar bg="light" expand="lg">
