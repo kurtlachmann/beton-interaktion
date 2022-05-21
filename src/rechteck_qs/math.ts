@@ -51,12 +51,12 @@ interface DataPoint {
 }
 
 
-export function calcData(qs: Querschnitt, beton: Beton, baustahlConfig: BaustahlConfig, spannstahlConfig: SpannstahlConfig, einwirkung: Einwirkung): Data {
+export function calc_data(qs: Querschnitt, beton: Beton, baustahlConfig: BaustahlConfig, spannstahlConfig: SpannstahlConfig, einwirkung: Einwirkung): Data {
 	let data: DataPoint[] = [];
-	for (const [e_c, e_s, reftype] of getEpsilonSamplePoints()) {
+	for (const [e_c, e_s, reftype] of get_epsilon_sample_points()) {
 		data.push(calc(e_c, e_s, reftype, qs, beton, baustahlConfig, spannstahlConfig, einwirkung));
 	}
-	for (const [e_c, e_s, reftype] of getEpsilonSamplePoints(true)) {
+	for (const [e_c, e_s, reftype] of get_epsilon_sample_points(true)) {
 		data.push(calc2(e_c, e_s, reftype, qs, beton, baustahlConfig, spannstahlConfig, einwirkung));
 	}
 
@@ -93,7 +93,7 @@ function interpolate_data_points(data_points: DataPoint[], target_N_Ed: number):
 }
 
 
-function* getEpsilonSamplePoints(reverse: boolean = false): Generator<[number, number, RefType]> {
+function* get_epsilon_sample_points(reverse: boolean = false): Generator<[number, number, RefType]> {
 	const stepSize = 0.1;
 	if (!reverse) {
 		yield [-2, -2, RefType.H];

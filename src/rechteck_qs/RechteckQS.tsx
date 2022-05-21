@@ -4,7 +4,7 @@ import { b500 } from './Baustahl';
 import { BetonList } from './Beton';
 import Input from './Input';
 import InputCard from './InputCard';
-import { BaustahlConfig, calcData, Einwirkung, Querschnitt, SpannstahlConfig } from './math';
+import { BaustahlConfig, calc_data, Einwirkung, Querschnitt, SpannstahlConfig } from './math';
 import { SpannstahlList } from './Spannstahl';
 
 const Graph = React.lazy(() => import('./Graph'));
@@ -16,25 +16,25 @@ function DropDown(props: any) {
 	};
 
 	let unit = <>{props.unit}</>;
-	let unitTextWidth = props.unit?.length + "em";
+	let unit_text_width = props.unit?.length + "em";
 	if (props.unit === "cm") {
-		unitTextWidth = "3.8em";
+		unit_text_width = "3.8em";
 	} else if (props.unit === "kN") {
-		unitTextWidth = "3.6em";
+		unit_text_width = "3.6em";
 	} else if (props.unit === "kNm") {
-		unitTextWidth = "4.6em";
+		unit_text_width = "4.6em";
 	} else if (props.unit === "cm2") {
 		unit = <>cm<sup>2</sup></>
-		unitTextWidth = "4.2em";
+		unit_text_width = "4.2em";
 	} else if (props.unit === "N/mm2") {
 		unit = <>N/mm<sup>2</sup></>
-		unitTextWidth = "5.7em";
+		unit_text_width = "5.7em";
 	}
 
 	return <Row style={{ alignItems: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
 		<Col xs="auto" style={{ textAlign: "right", width: "5em" }}>{props.label}</Col>
 		<Col style={{ display: "flex", alignItems: "center" }}>
-			<Form.Select style={{ width: "100%", paddingRight: unitTextWidth, textAlign: "right" }} value={props.value} onChange={handleChange}>
+			<Form.Select style={{ width: "100%", paddingRight: unit_text_width, textAlign: "right" }} value={props.value} onChange={handleChange}>
 				{props.options.map((option: string | number) => (
 					<option key={option} value={option}>{option}</option>
 				))}
@@ -82,14 +82,14 @@ export default function RechteckQS() {
 		b: b,
 		h: h
 	};
-	const baustahlConfig: BaustahlConfig = {
+	const baustahl_cfg: BaustahlConfig = {
 		material: b500,
 		A_s1: A_s1,
 		A_s2: A_s2,
 		d_1: d_1,
 		d_2: d_2
 	};
-	const spannstahlConfig: SpannstahlConfig = {
+	const spannstahl_cfg: SpannstahlConfig = {
 		material: stahl,
 		E_p: E_p,
 		A_p: A_p,
@@ -99,7 +99,7 @@ export default function RechteckQS() {
 		N_Ed: N_Ed,
 		M_Ed: M_Ed
 	}
-	const {interpolated, MN_data_points} = calcData(qs, beton, baustahlConfig, spannstahlConfig, einwirkung);
+	const {interpolated, MN_data_points} = calc_data(qs, beton, baustahl_cfg, spannstahl_cfg, einwirkung);
 
 	const e_p0 = A_p === 0 ? 0 : 1000 * (N_Ed / A_p) / (0.1 * E_p);
 
