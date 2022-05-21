@@ -1,7 +1,9 @@
 import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 import { Col, Container, Form, Navbar, Row } from 'react-bootstrap';
+import { b500 } from './Baustahl';
 import { BetonList } from './Beton';
-import InputCard, { SelectionOption } from './InputCard';
+import InputCard from './InputCard';
+import { BaustahlConfig, calcData, Einwirkung, Querschnitt, SpannstahlConfig } from './math';
 import { SpannstahlList } from './Spannstahl';
 
 const Graph = React.lazy(() => import('./Graph'));
@@ -104,7 +106,28 @@ export default function RechteckQS() {
 	const [N_Ed, set_N_Ed] = useState(1000.0);
 	const [M_Ed, set_M_Ed] = useState(1500.0);
 
-	const [M_Rd, set_M_Rd] = useState(0);
+	let qs: Querschnitt = {
+		b: b,
+		h: h
+	};
+	let baustahlConfig: BaustahlConfig = {
+		material: b500,
+		A_s1: A_s1,
+		A_s2: A_s2,
+		d_1: d_1,
+		d_2: d_2
+	};
+	let spannstahlConfig: SpannstahlConfig = {
+		material: stahl,
+		E_p: E_p,
+		A_p: A_p,
+		d_p: d_p,
+	};
+	let einwirkung: Einwirkung = {
+		N_Ed: N_Ed,
+		M_Ed: M_Ed
+	}
+	let {M_Rd, dataPoints} = calcData(qs, beton, baustahlConfig, spannstahlConfig, einwirkung);
 
 	return <>
 		<Navbar bg="light" expand="lg">
@@ -148,7 +171,7 @@ export default function RechteckQS() {
 
 					<InputCard header="M-N-Interaktion">
 						<React.Suspense fallback={<div />}>
-							<Graph beton={beton} spannstahl={stahl} A_s1={A_s1} A_s2={A_s2} d_1={d_1} d_2={d_2} E_p={E_p} A_p={A_p} d_p={d_p} b={b} h={h} N_Ed={N_Ed} M_Ed={M_Ed} set_M_Rd={set_M_Rd} />
+							<Graph data={dataPoints} Rd={[M_Rd, N_Ed]} Ed={[M_Ed, N_Ed]} />
 						</React.Suspense>
 					</InputCard>
 

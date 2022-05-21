@@ -99,4 +99,4 @@ test.each([
 	expect(M_Rd).toBeCloseTo(expected_M_Rd);
 })
 
-export {}
+export { };
