@@ -1,7 +1,7 @@
 {
   "name": "beton-interaktion",
   "version": "0.1.0",
-  "homepage": "https://kurtlachmann.github.io/beton-interaktion/",
+  "homepage": "https://kurtlachmann.github.io/beton-interaktion",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.9.0",
