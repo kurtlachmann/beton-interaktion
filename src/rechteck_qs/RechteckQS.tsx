@@ -2,48 +2,12 @@ import React, { Dispatch, ReactNode, SetStateAction, useState } from 'react';
 import { Col, Container, Form, Navbar, Row } from 'react-bootstrap';
 import { b500 } from './Baustahl';
 import { BetonList } from './Beton';
+import Input from './Input';
 import InputCard from './InputCard';
 import { BaustahlConfig, calcData, Einwirkung, Querschnitt, SpannstahlConfig } from './math';
 import { SpannstahlList } from './Spannstahl';
 
 const Graph = React.lazy(() => import('./Graph'));
-
-export interface InputProps {
-	label: string | ReactNode,
-	value: number,
-	unit: string,
-	setter: Dispatch<SetStateAction<number>>
-}
-
-function Input(props: InputProps) {
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		props.setter(parseFloat(event.target.value))
-	};
-
-	let unit = <>{props.unit}</>;
-	let unitTextWidth = props.unit?.length + "em";
-	if (props.unit === "cm") {
-		unitTextWidth = "2.5em";
-	} else if (props.unit === "kN") {
-		unitTextWidth = "2.3em";
-	} else if (props.unit === "kNm") {
-		unitTextWidth = "3.3em";
-	} else if (props.unit === "cm2") {
-		unit = <>cm<sup>2</sup></>
-		unitTextWidth = "2.9em";
-	} else if (props.unit === "N/mm2") {
-		unit = <>N/mm<sup>2</sup></>
-		unitTextWidth = "4.5em";
-	}
-
-	return <Row style={{ alignItems: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
-		<Col xs="auto" style={{ textAlign: "right", width: "5em" }}>{props.label}</Col>
-		<Col style={{ display: "flex", alignItems: "center" }}>
-			<Form.Control type="number" style={{ width: "100%", paddingRight: unitTextWidth, textAlign: "right" }} value={props.value} onChange={handleChange}></Form.Control>
-			<span style={{ position: "absolute", right: 30, color: "#888", pointerEvents: "none" }}>{unit}</span>
-		</Col>
-	</Row>
-}
 
 
 function DropDown(props: any) {
@@ -143,26 +107,26 @@ export default function RechteckQS() {
 					<InputCard header="Beton" options={BetonList} selectionSetter={setBeton} />
 
 					<InputCard header="Baustahl" options={[{label: "B500"}]}>
-						<Input label={<>A<sub>s1</sub></>} value={A_s1} unit="cm2" setter={set_A_s1} />
-						<Input label={<>A<sub>s2</sub></>} value={A_s2} unit="cm2" setter={set_A_s2} />
-						<Input label={<>d<sub>1</sub></>} value={d_1} unit="cm" setter={set_d_1} />
-						<Input label={<>d<sub>2</sub></>} value={d_2} unit="cm" setter={set_d_2} />
+						<Input label={<>A<sub>s1</sub></>} defaultValue={A_s1} unit="cm2" setValue={set_A_s1} />
+						<Input label={<>A<sub>s2</sub></>} defaultValue={A_s2} unit="cm2" setValue={set_A_s2} />
+						<Input label={<>d<sub>1</sub></>} defaultValue={d_1} unit="cm" setValue={set_d_1} />
+						<Input label={<>d<sub>2</sub></>} defaultValue={d_2} unit="cm" setValue={set_d_2} />
 					</InputCard>
 
 					<InputCard header="Spannstahl" options={SpannstahlList} selectionSetter={setStahl} >
-						<DropDown label={<>E<sub>p</sub></>} options={[195000, 205000]} unit="N/mm2" setter={set_E_p} />
-						<Input label={<>A<sub>p</sub></>} value={A_p} unit="cm2" setter={set_A_p} />
-						<Input label={<>d<sub>p</sub></>} value={d_p} unit="cm" setter={set_d_p} />
+						<DropDown label={<>E<sub>p</sub></>} options={[195000, 205000]} unit="N/mm2" setValue={set_E_p} />
+						<Input label={<>A<sub>p</sub></>} defaultValue={A_p} unit="cm2" setValue={set_A_p} />
+						<Input label={<>d<sub>p</sub></>} defaultValue={d_p} unit="cm" setValue={set_d_p} />
 					</InputCard>
 
 					<InputCard header="Querschnitt">
-						<Input label="Breite b" value={b} unit="cm" setter={set_b} />
-						<Input label="Höhe h" value={h} unit="cm" setter={set_h} />
+						<Input label="Breite b" defaultValue={b} unit="cm" setValue={set_b} />
+						<Input label="Höhe h" defaultValue={h} unit="cm" setValue={set_h} />
 					</InputCard>
 
 					<InputCard header="Einwirkung">
-						<Input label={<>N<sub>Ed</sub></>} value={N_Ed} unit="kN" setter={set_N_Ed} />
-						<Input label={<>M<sub>Ed</sub></>} value={M_Ed} unit="kNm" setter={set_M_Ed} />
+						<Input label={<>N<sub>Ed</sub></>} defaultValue={N_Ed} unit="kN" setValue={set_N_Ed} />
+						<Input label={<>M<sub>Ed</sub></>} defaultValue={M_Ed} unit="kNm" setValue={set_M_Ed} />
 						<p>&epsilon;<sub>p</sub><sup>(0)</sup></p>
 					</InputCard>
 
