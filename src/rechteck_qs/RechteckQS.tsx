@@ -93,6 +93,8 @@ export default function RechteckQS() {
 	}
 	const {M_Rd, dataPoints} = calcData(qs, beton, baustahlConfig, spannstahlConfig, einwirkung);
 
+	const e_p0 = A_p === 0 ? 0 : 1000 * (N_Ed / A_p) / (0.1 * E_p);
+
 	return <>
 		<Navbar bg="light" expand="lg">
 			<Container>
@@ -127,7 +129,7 @@ export default function RechteckQS() {
 					<InputCard header="Einwirkung">
 						<Input label={<>N<sub>Ed</sub></>} defaultValue={N_Ed} unit="kN" setValue={set_N_Ed} />
 						<Input label={<>M<sub>Ed</sub></>} defaultValue={M_Ed} unit="kNm" setValue={set_M_Ed} />
-						<p>&epsilon;<sub>p</sub><sup>(0)</sup></p>
+						<p>&epsilon;<sub>p</sub><sup>(0)</sup>: {e_p0.toFixed(3)}</p>
 					</InputCard>
 
 				</Col>
