@@ -99,7 +99,7 @@ export default function RechteckQS() {
 		N_Ed: N_Ed,
 		M_Ed: M_Ed
 	}
-	const {M_Rd, dataPoints} = calcData(qs, beton, baustahlConfig, spannstahlConfig, einwirkung);
+	const {interpolated, MN_data_points} = calcData(qs, beton, baustahlConfig, spannstahlConfig, einwirkung);
 
 	const e_p0 = A_p === 0 ? 0 : 1000 * (N_Ed / A_p) / (0.1 * E_p);
 
@@ -145,21 +145,21 @@ export default function RechteckQS() {
 
 					<InputCard header="M-N-Interaktion">
 						<React.Suspense fallback={<div />}>
-							<Graph data={dataPoints} Rd={[M_Rd, N_Ed]} Ed={[M_Ed, N_Ed]} />
+							<Graph data={MN_data_points} Rd={[interpolated.M_Rd, interpolated.N_Rd]} Ed={[M_Ed, N_Ed]} />
 						</React.Suspense>
 					</InputCard>
 
 					<InputCard header="Widerstand">
 						<p>
-							N<sub>Rd</sub> = {N_Ed.toFixed(1)} kN
+							N<sub>Rd</sub> = {interpolated.N_Rd.toFixed(1)} kN
 						</p>
 						<p>
-							M<sub>Rd</sub> = {M_Rd.toFixed(1)} kNm
+							M<sub>Rd</sub> = {interpolated.M_Rd.toFixed(1)} kNm
 						</p>
-						<p>&epsilon;<sub>c</sub></p>
-						<p>&epsilon;<sub>s1</sub></p>
-						<p>&epsilon;<sub>s2</sub></p>
-						<p>&epsilon;<sub>p</sub></p>
+						<p>&epsilon;<sub>c</sub> = {interpolated.e_c.toFixed(3)}</p>
+						<p>&epsilon;<sub>s1</sub> = {interpolated.e_s1.toFixed(3)}</p>
+						<p>&epsilon;<sub>s2</sub> = {interpolated.e_s2.toFixed(3)}</p>
+						<p>&epsilon;<sub>p</sub> = {interpolated.e_p.toFixed(3)}</p>
 					</InputCard>
 
 				</Col>

@@ -36,41 +36,60 @@ export interface Einwirkung {
 
 
 export interface Data {
-	M_Rd: number,
-	dataPoints: [number, number][]
+	interpolated: DataPoint
+	MN_data_points: [number, number][]
+}
+
+
+interface DataPoint {
+	e_c: number
+	e_s1: number
+	e_s2: number
+	e_p: number
+	M_Rd: number
+	N_Rd: number
 }
 
 
 export function calcData(qs: Querschnitt, beton: Beton, baustahlConfig: BaustahlConfig, spannstahlConfig: SpannstahlConfig, einwirkung: Einwirkung): Data {
-	let data: [number, number][] = [];
+	let data: DataPoint[] = [];
 	for (const [e_c, e_s, reftype] of getEpsilonSamplePoints()) {
-		let { N_Rd, M_Rd } = calc(e_c, e_s, reftype, qs, beton, baustahlConfig, spannstahlConfig, einwirkung)
-		data.push([M_Rd, N_Rd])
+		data.push(calc(e_c, e_s, reftype, qs, beton, baustahlConfig, spannstahlConfig, einwirkung));
 	}
 	for (const [e_c, e_s, reftype] of getEpsilonSamplePoints(true)) {
-		let { N_Rd, M_Rd } = calc2(e_c, e_s, reftype, qs, beton, baustahlConfig, spannstahlConfig, einwirkung)
-		data.push([M_Rd, N_Rd])
+		data.push(calc2(e_c, e_s, reftype, qs, beton, baustahlConfig, spannstahlConfig, einwirkung));
 	}
-
-	// Interpolation
-	let [M_bigger, N_smaller] = data[0];
-	let [M_smaller, N_bigger] = data[1];
-	for (let [M, N] of data) {
-		if (N < einwirkung.N_Ed) {
-			N_smaller = N;
-			M_bigger = M;
-			break;
-		}
-		N_bigger = N;
-		M_smaller = M;
-	}
-	let diff = (N_smaller - einwirkung.N_Ed) / (N_smaller - N_bigger);
-	let M_interpolated = M_bigger - diff * (M_bigger - M_smaller);
 
 	return {
-		M_Rd: M_interpolated,
-		dataPoints: data
+		interpolated: interpolate_data_points(data, einwirkung.N_Ed),
+		MN_data_points: data.map((d) => [d.M_Rd, d.N_Rd])
 	};
+}
+
+
+function interpolate_data_points(data_points: DataPoint[], target_N_Ed: number): DataPoint {
+	// Find the two data points where N is lower/higher than the target N_Ed (the neighboring values).
+	let data_before = data_points[0];
+	let data_after = data_points[1];
+	for (const data_point of data_points) {
+		if (data_point.N_Rd < target_N_Ed) {
+			data_before = data_point;
+			break;
+		}
+		data_after = data_point;
+	}
+
+	// Interpolate between the two closest data points
+	let diff = (data_before.N_Rd - target_N_Ed) / (data_before.N_Rd - data_after.N_Rd);
+	const interpolate = (before: number, after: number) => before - diff * (after - before);
+	return {
+		e_c: interpolate(data_before.e_c, data_after.e_c),
+		e_s1: interpolate(data_before.e_s1, data_after.e_s1),
+		e_s2: interpolate(data_before.e_s2, data_after.e_s2),
+		e_p: interpolate(data_before.e_p, data_after.e_p),
+		M_Rd: interpolate(data_before.M_Rd, data_after.M_Rd),
+		N_Rd: interpolate(data_before.N_Rd, data_after.N_Rd),
+	}
 }
 
 
@@ -152,7 +171,7 @@ function get_beton_F_and_x(e_c: number, e_s: number, ref: number, qs: Querschnit
 }
 
 
-export function calc(e_c: number, e_s: number, refType: RefType, qs: Querschnitt, beton: Beton, baustahl: BaustahlConfig, spannstahl: SpannstahlConfig, einwirkung: Einwirkung) {
+export function calc(e_c: number, e_s: number, refType: RefType, qs: Querschnitt, beton: Beton, baustahl: BaustahlConfig, spannstahl: SpannstahlConfig, einwirkung: Einwirkung): DataPoint {
 	let ref = refType === RefType.H ? qs.h : qs.h - baustahl.d_1;
 
 	// Beton
@@ -184,26 +203,26 @@ export function calc(e_c: number, e_s: number, refType: RefType, qs: Querschnitt
 	bewehrung_unten_dF_c *= baustahl.A_s1;
 
 	// Bewehrung oben
-	let bewehrung_oben_e_s1 = e_c - ((e_c - e_s) / ref) * baustahl.d_2
+	let bewehrung_oben_e_s2 = e_c - ((e_c - e_s) / ref) * baustahl.d_2
 
 	let bewehrung_oben_F_s;
-	if (bewehrung_oben_e_s1 < -2.174) {
+	if (bewehrung_oben_e_s2 < -2.174) {
 		bewehrung_oben_F_s = baustahl.material.f_yd
-	} else if (bewehrung_oben_e_s1 > 2.174) {
+	} else if (bewehrung_oben_e_s2 > 2.174) {
 		bewehrung_oben_F_s = -baustahl.material.f_yd;
 	} else {
-		bewehrung_oben_F_s = bewehrung_oben_e_s1 * 0.001 * baustahl.material.E * (-1)
+		bewehrung_oben_F_s = bewehrung_oben_e_s2 * 0.001 * baustahl.material.E * (-1)
 	}
 	bewehrung_oben_F_s *= baustahl.A_s2
 
 	let bewehrung_oben_x_s = (0.5 * qs.h) - baustahl.d_2;
 
 	let bewehrung_oben_dF_c = 0;
-	if (bewehrung_oben_e_s1 < 0) {
-		if (bewehrung_oben_e_s1 < beton.e_c2) {
+	if (bewehrung_oben_e_s2 < 0) {
+		if (bewehrung_oben_e_s2 < beton.e_c2) {
 			bewehrung_oben_dF_c = beton.f_cd * 0.1;
 		} else {
-			bewehrung_oben_dF_c = beton.f_cd * 0.1 * (1 - (1 - (bewehrung_oben_e_s1 / beton.e_c2)) ** 2);
+			bewehrung_oben_dF_c = beton.f_cd * 0.1 * (1 - (1 - (bewehrung_oben_e_s2 / beton.e_c2)) ** 2);
 		}
 	}
 	bewehrung_oben_dF_c *= baustahl.A_s2;
@@ -247,13 +266,17 @@ export function calc(e_c: number, e_s: number, refType: RefType, qs: Querschnitt
 	let M_Rd = (beton_Fc * beton_x_s + (bewehrung_unten_F_s - bewehrung_unten_dF_c) * bewehrung_unten_x_s + (bewehrung_oben_F_s - bewehrung_oben_dF_c) * bewehrung_oben_x_s + (spannstahl_F_p - spannstahl_dF_c) * spannstahl_x_sp) / 100
 
 	return {
+		e_c: e_c,
+		e_s1: bewehrung_unten_e_s1,
+		e_s2: bewehrung_oben_e_s2,
+		e_p: spannstahl_e_p,
+		M_Rd: M_Rd,
 		N_Rd: N_Rd,
-		M_Rd: M_Rd
 	}
 }
 
 
-export function calc2(e_c: number, e_s: number, refType: RefType, qs: Querschnitt, beton: Beton, baustahl: BaustahlConfig, spannstahl: SpannstahlConfig, einwirkung: Einwirkung) {
+export function calc2(e_c: number, e_s: number, refType: RefType, qs: Querschnitt, beton: Beton, baustahl: BaustahlConfig, spannstahl: SpannstahlConfig, einwirkung: Einwirkung): DataPoint {
 	let ref = refType === RefType.H ? qs.h : qs.h - baustahl.d_2;
 
 	// Beton
@@ -285,26 +308,26 @@ export function calc2(e_c: number, e_s: number, refType: RefType, qs: Querschnit
 	bewehrung_unten_dF_c *= baustahl.A_s2;
 
 	// Bewehrung oben
-	let bewehrung_oben_e_s1 = e_c - ((e_c - e_s) / ref) * baustahl.d_1
+	let bewehrung_oben_e_s2 = e_c - ((e_c - e_s) / ref) * baustahl.d_1
 
 	let bewehrung_oben_F_s;
-	if (bewehrung_oben_e_s1 < -2.174) {
+	if (bewehrung_oben_e_s2 < -2.174) {
 		bewehrung_oben_F_s = baustahl.material.f_yd
-	} else if (bewehrung_oben_e_s1 > 2.174) {
+	} else if (bewehrung_oben_e_s2 > 2.174) {
 		bewehrung_oben_F_s = -baustahl.material.f_yd;
 	} else {
-		bewehrung_oben_F_s = bewehrung_oben_e_s1 * 0.001 * baustahl.material.E * (-1)
+		bewehrung_oben_F_s = bewehrung_oben_e_s2 * 0.001 * baustahl.material.E * (-1)
 	}
 	bewehrung_oben_F_s *= baustahl.A_s1;
 
 	let bewehrung_oben_x_s = (0.5 * qs.h) - baustahl.d_1;
 
 	let bewehrung_oben_dF_c = 0;
-	if (bewehrung_oben_e_s1 < 0) {
-		if (bewehrung_oben_e_s1 < beton.e_c2) {
+	if (bewehrung_oben_e_s2 < 0) {
+		if (bewehrung_oben_e_s2 < beton.e_c2) {
 			bewehrung_oben_dF_c = beton.f_cd * 0.1;
 		} else {
-			bewehrung_oben_dF_c = beton.f_cd * 0.1 * (1 - (1 - (bewehrung_oben_e_s1 / beton.e_c2)) ** 2);
+			bewehrung_oben_dF_c = beton.f_cd * 0.1 * (1 - (1 - (bewehrung_oben_e_s2 / beton.e_c2)) ** 2);
 		}
 	}
 	bewehrung_oben_dF_c *= baustahl.A_s1;
@@ -348,7 +371,11 @@ export function calc2(e_c: number, e_s: number, refType: RefType, qs: Querschnit
 	let M_Rd = -(beton_Fc * beton_x_s + (bewehrung_unten_F_s - bewehrung_unten_dF_c) * bewehrung_unten_x_s + (bewehrung_oben_F_s - bewehrung_oben_dF_c) * bewehrung_oben_x_s + (spannstahl_F_p - spannstahl_dF_c) * spannstahl_x_sp) / 100
 
 	return {
+		e_c: e_c,
+		e_s1: bewehrung_unten_e_s1,
+		e_s2: bewehrung_oben_e_s2,
+		e_p: spannstahl_e_p,
+		M_Rd: M_Rd,
 		N_Rd: N_Rd,
-		M_Rd: M_Rd
 	}
 }
