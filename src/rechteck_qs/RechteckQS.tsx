@@ -162,10 +162,10 @@ export default function RechteckQS() {
 								<p>
 									M<sub>Rd</sub> = {interpolated.M_Rd.toFixed(1)} kNm
 								</p>
-								<p>&epsilon;<sub>c</sub> = {interpolated.e_c.toFixed(3)}</p>
-								<p>&epsilon;<sub>s1</sub> = {interpolated.e_s1.toFixed(3)}</p>
-								<p>&epsilon;<sub>s2</sub> = {interpolated.e_s2.toFixed(3)}</p>
-								<p>&epsilon;<sub>p</sub> = {interpolated.e_p.toFixed(3)}</p>
+								<p>&epsilon;<sub>c</sub> = {interpolated.e_c.toFixed(3)} &permil;</p>
+								<p>&epsilon;<sub>s1</sub> = {interpolated.e_s1.toFixed(3)} &permil;</p>
+								<p>&epsilon;<sub>s2</sub> = {interpolated.e_s2.toFixed(3)} &permil;</p>
+								<p>&epsilon;<sub>p</sub> = {interpolated.e_p.toFixed(3)} &permil;</p>
 							</InputCard>
 						</Col>
 					</Row>
