@@ -81,7 +81,7 @@ function interpolate_data_points(data_points: DataPoint[], target_N_Ed: number):
 
 	// Interpolate between the two closest data points
 	let diff = (data_before.N_Rd - target_N_Ed) / (data_before.N_Rd - data_after.N_Rd);
-	const interpolate = (before: number, after: number) => before - diff * (after - before);
+	const interpolate = (before: number, after: number) => before - diff * (before - after);
 	return {
 		e_c: interpolate(data_before.e_c, data_after.e_c),
 		e_s1: interpolate(data_before.e_s1, data_after.e_s1),
