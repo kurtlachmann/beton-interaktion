@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Col, Container, Form, Navbar, Row } from 'react-bootstrap';
 import { b500 } from './Baustahl';
 import { BetonList } from './Beton';
+import CrossSection from './CrossSection';
 import Input from './Input';
 import InputCard from './InputCard';
 import { BaustahlConfig, calc_data, Einwirkung, Querschnitt, SpannstahlConfig } from './math';
@@ -47,7 +48,7 @@ function DropDown(props: any) {
 }
 
 
-function LabeledField(props: {label: any, value: any}) {
+function LabeledField(props: { label: any, value: any }) {
 	return <Row style={{ alignItems: "center", marginTop: "0.5em", marginBottom: "0.5em" }}>
 		<Col xs="auto" style={{ textAlign: "right", width: "5em" }}>{props.label}</Col>
 		<Col style={{ textAlign: "right", marginRight: "1em" }}>{props.value}</Col>
@@ -99,7 +100,7 @@ export default function RechteckQS() {
 		N_Ed: N_Ed,
 		M_Ed: M_Ed
 	}
-	const {interpolated, MN_data_points} = calc_data(qs, beton, baustahl_cfg, spannstahl_cfg, einwirkung);
+	const { interpolated, MN_data_points } = calc_data(qs, beton, baustahl_cfg, spannstahl_cfg, einwirkung);
 
 	const e_p0 = A_p === 0 ? 0 : 1000 * (N_Ed / A_p) / (0.1 * E_p);
 
@@ -116,7 +117,7 @@ export default function RechteckQS() {
 
 					<InputCard header="Beton" options={BetonList} selectionSetter={setBeton} />
 
-					<InputCard header="Baustahl" options={[{label: "B500"}]}>
+					<InputCard header="Baustahl" options={[{ label: "B500" }]}>
 						<Input label={<>A<sub>s1</sub></>} defaultValue={A_s1} unit="cm2" setValue={set_A_s1} />
 						<Input label={<>d<sub>1</sub></>} defaultValue={d_1} unit="cm" setValue={set_d_1} />
 						<Input label={<>A<sub>s2</sub></>} defaultValue={A_s2} unit="cm2" setValue={set_A_s2} />
@@ -149,18 +150,25 @@ export default function RechteckQS() {
 						</React.Suspense>
 					</InputCard>
 
-					<InputCard header="Widerstand">
-						<p>
-							N<sub>Rd</sub> = {interpolated.N_Rd.toFixed(1)} kN
-						</p>
-						<p>
-							M<sub>Rd</sub> = {interpolated.M_Rd.toFixed(1)} kNm
-						</p>
-						<p>&epsilon;<sub>c</sub> = {interpolated.e_c.toFixed(3)}</p>
-						<p>&epsilon;<sub>s1</sub> = {interpolated.e_s1.toFixed(3)}</p>
-						<p>&epsilon;<sub>s2</sub> = {interpolated.e_s2.toFixed(3)}</p>
-						<p>&epsilon;<sub>p</sub> = {interpolated.e_p.toFixed(3)}</p>
-					</InputCard>
+					<Row>
+						<Col xs={5}>
+							<CrossSection />
+						</Col>
+						<Col>
+							<InputCard header="Widerstand">
+								<p>
+									N<sub>Rd</sub> = {interpolated.N_Rd.toFixed(1)} kN
+								</p>
+								<p>
+									M<sub>Rd</sub> = {interpolated.M_Rd.toFixed(1)} kNm
+								</p>
+								<p>&epsilon;<sub>c</sub> = {interpolated.e_c.toFixed(3)}</p>
+								<p>&epsilon;<sub>s1</sub> = {interpolated.e_s1.toFixed(3)}</p>
+								<p>&epsilon;<sub>s2</sub> = {interpolated.e_s2.toFixed(3)}</p>
+								<p>&epsilon;<sub>p</sub> = {interpolated.e_p.toFixed(3)}</p>
+							</InputCard>
+						</Col>
+					</Row>
 
 				</Col>
 			</Row>
