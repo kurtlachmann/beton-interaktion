@@ -1,7 +1,7 @@
 import { Card } from "react-bootstrap";
 
 
-function CrossSection() {
+export function CrossSection() {
 	const padding = {
 		top: 10,
 		bottom: 35,
@@ -14,7 +14,7 @@ function CrossSection() {
 
 	const baustahl_margin = width / 5;
 	return <>
-		<svg width={width + stroke_width + padding.left + padding.right} height={height + stroke_width + padding.top + padding.bottom} style={{display: "block"}}>
+		<svg width={width + stroke_width + padding.left + padding.right} height={height + stroke_width + padding.top + padding.bottom} style={{display: "block", margin: "auto"}}>
 			<rect x={stroke_width/2 + padding.left} y={stroke_width/2 + padding.top} width={width} height={height} stroke="#666" strokeWidth={stroke_width} fill="#eee" />
 
 			{/* Labels on the sides */}
@@ -54,9 +54,9 @@ function CrossSection() {
 
 
 function Text(props: {x: number, y: number, text: string, sub?: string}) {
-	return <text x={props.x} y={props.y} dominant-baseline="middle" text-anchor="middle">
+	return <text x={props.x} y={props.y} dominantBaseline="middle" textAnchor="middle">
 		{props.text}
-		<tspan baseline-shift="sub" style={{fontSize: "0.7em"}}>{props.sub}</tspan>
+		<tspan baselineShift="sub" style={{fontSize: "0.7em"}}>{props.sub}</tspan>
 	</text>
 }
 
