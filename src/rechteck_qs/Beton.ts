@@ -1,4 +1,4 @@
-import { SelectionOption } from "./InputCard"
+import { SelectionOption } from "./Selector"
 
 
 export class Beton implements SelectionOption {

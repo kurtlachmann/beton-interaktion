@@ -1,6 +1,10 @@
 import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
 import { Row, Col, Form } from "react-bootstrap";
-import { SelectionOption } from "./InputCard";
+
+
+export interface SelectionOption {
+	label: string
+}
 
 
 export interface ValSelectorProps {

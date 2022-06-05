@@ -5,7 +5,6 @@ import { BetonList } from './Beton';
 import { CrossSection } from './CrossSection';
 import { ObjSelector, ValSelector } from './Selector';
 import Input from './Input';
-import InputCard from './InputCard';
 import { BaustahlConfig, calc_data, Einwirkung, Querschnitt, SpannstahlConfig } from './math';
 import Section, { OptionalSection } from './Section';
 import { SpannstahlList } from './Spannstahl';
@@ -72,14 +71,14 @@ export default function RechteckQS() {
 	return <>
 		<Navbar bg="dark" expand="lg">
 			<Container>
-				<Navbar.Brand href="/beton-interaktion" style={{color: "#fff"}}>Rechteck Querschnitt</Navbar.Brand>
+				<Navbar.Brand href="/beton-interaktion" style={{ color: "#fff" }}>Rechteck Querschnitt</Navbar.Brand>
 			</Container>
 		</Navbar>
 
 		<Container style={{ marginBottom: "1em" }} fluid>
-			<Row className="justify-content-md-center" style={{marginTop: "2em"}}>
+			<Row className="justify-content-md-center" style={{ marginTop: "2em" }}>
 				<Col xl={2}>
-					<div style={{marginTop: "1em", marginBottom: "1.5em"}}>
+					<div style={{ marginTop: "1em", marginBottom: "1.5em" }}>
 						<CrossSection />
 					</div>
 				</Col>
@@ -92,7 +91,7 @@ export default function RechteckQS() {
 					</Section>
 
 					<Section title="Bewehrung">
-						<ObjSelector label="Stahl" options={BaustahlList} setValue={() => {}} />
+						<ObjSelector label="Stahl" options={BaustahlList} setValue={() => { }} />
 						<Input label={<>A<sub>s1</sub></>} defaultValue={A_s1} unit="cm2" setValue={set_A_s1} />
 						<Input label={<>d<sub>1</sub></>} defaultValue={d_1} unit="cm" setValue={set_d_1} />
 						<Input label={<>A<sub>s2</sub></>} defaultValue={A_s2} unit="cm2" setValue={set_A_s2} />
@@ -113,26 +112,24 @@ export default function RechteckQS() {
 					</Section>
 
 				</Col>
-				<Col xs={{ order: 1, span: 12 }} md={{ order: 2, span: 6 }} lg={{ order: 2, span: 8 }} xl={{ order: 1, span: 6 }} style={{paddingLeft: "2em"}}>
+				<Col xs={{ order: 1, span: 12 }} md={{ order: 2, span: 6 }} lg={{ order: 2, span: 8 }} xl={{ order: 1, span: 6 }} style={{ paddingLeft: "2em" }}>
 
-					<React.Suspense fallback={<div/>}>
+					<React.Suspense fallback={<div />}>
 						<Graph data={MN_data_points} Rd={[interpolated.M_Rd, interpolated.N_Rd]} Ed={[M_Ed, N_Ed]} />
 					</React.Suspense>
 
 					<Row>
 						<Col>
-							<InputCard header="Widerstand">
-								<p>
-									N<sub>Rd</sub> = {interpolated.N_Rd.toFixed(1)} kN
-								</p>
-								<p>
-									M<sub>Rd</sub> = {interpolated.M_Rd.toFixed(1)} kNm
-								</p>
-								<p>&epsilon;<sub>c</sub> = {interpolated.e_c.toFixed(3)} &permil;</p>
-								<p>&epsilon;<sub>s1</sub> = {interpolated.e_s1.toFixed(3)} &permil;</p>
-								<p>&epsilon;<sub>s2</sub> = {interpolated.e_s2.toFixed(3)} &permil;</p>
-								<p>&epsilon;<sub>p</sub> = {interpolated.e_p.toFixed(3)} &permil;</p>
-							</InputCard>
+							<p>
+								N<sub>Rd</sub> = {interpolated.N_Rd.toFixed(1)} kN
+							</p>
+							<p>
+								M<sub>Rd</sub> = {interpolated.M_Rd.toFixed(1)} kNm
+							</p>
+							<p>&epsilon;<sub>c</sub> = {interpolated.e_c.toFixed(3)} &permil;</p>
+							<p>&epsilon;<sub>s1</sub> = {interpolated.e_s1.toFixed(3)} &permil;</p>
+							<p>&epsilon;<sub>s2</sub> = {interpolated.e_s2.toFixed(3)} &permil;</p>
+							<p>&epsilon;<sub>p</sub> = {interpolated.e_p.toFixed(3)} &permil;</p>
 						</Col>
 					</Row>
 
