@@ -99,7 +99,12 @@ function getGraphOptions(x_min: number, x_max: number): ApexOptions {
 			shared: false,
 		},
 		legend: {
-			position: "top",
+			position: "bottom",
+			height: 40,
+			itemMargin: {
+				horizontal: 10,
+				vertical: 0
+			}
 		},
 		markers: {
 			// size: 3,
