@@ -45,10 +45,9 @@ export function OptionalSection(props: OptionalSectionProps) {
 	const on_label_clicked = () => {
 		setDisabled(!disabled);
 
-		// TODO https://17.reactjs.org/docs/concurrent-mode-patterns.html
-		// props.startUpdate(() => {
-			// props.setActive(!props.active);
-		// })
+		setTimeout(() => {
+			props.setActive(!props.active);
+		}, 0);
 	}
 
 	let clones = React.Children.map(props.children, child => {

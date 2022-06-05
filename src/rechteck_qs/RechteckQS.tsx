@@ -58,8 +58,8 @@ export default function RechteckQS() {
 	const spannstahl_cfg: SpannstahlConfig = {
 		material: stahl,
 		E_p: E_p,
-		A_p: A_p,
-		d_p: d_p,
+		A_p: spanngliedActive ? A_p : 0,
+		d_p: spanngliedActive ? d_p : 0,
 	};
 	const einwirkung: Einwirkung = {
 		N_Ed: N_Ed,
