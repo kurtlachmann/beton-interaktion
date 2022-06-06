@@ -20,6 +20,52 @@ function LabeledField(props: { label: any, value: any }) {
 }
 
 
+function ResultsSection(props: any) {
+	const items = [
+		{
+			label: <>N<sub>Rd</sub></>,
+			value: props.results.N_Rd,
+			precision: 1,
+			unit: "kN"
+		}, {
+			label: <>M<sub>Rd</sub></>,
+			value: props.results.M_Rd,
+			precision: 1,
+			unit: "kNm"
+		}, {
+			label: <>&epsilon;<sub>c</sub></>,
+			value: props.results.e_c,
+			precision: 3,
+			unit: <>&permil;</>
+		}, {
+			label: <>&epsilon;<sub>s1</sub></>,
+			value: props.results.e_s1,
+			precision: 3,
+			unit: <>&permil;</>
+		}, {
+			label: <>&epsilon;<sub>s2</sub></>,
+			value: props.results.e_s2,
+			precision: 3,
+			unit: <>&permil;</>
+		}, {
+			label: <>&epsilon;<sub>p</sub></>,
+			value: props.results.e_p,
+			precision: 3,
+			unit: <>&permil;</>
+		}
+	]
+	return <>
+		{items.map(({ label, value, precision, unit }) =>
+			<Row xs="auto">
+				<Col style={{ minWidth: "60px" }}>{label}</Col>
+				<Col>=</Col>
+				<Col>{value.toFixed(precision)} {unit}</Col>
+			</Row>
+		)}
+	</>
+}
+
+
 export default function RechteckQS() {
 	// Querschnitt input
 	const [beton, setBeton] = useState(BetonList[0]);
@@ -118,20 +164,7 @@ export default function RechteckQS() {
 						<Graph data={MN_data_points} Rd={[interpolated.M_Rd, interpolated.N_Rd]} Ed={[M_Ed, N_Ed]} />
 					</React.Suspense>
 
-					<Row>
-						<Col>
-							<p>
-								N<sub>Rd</sub> = {interpolated.N_Rd.toFixed(1)} kN
-							</p>
-							<p>
-								M<sub>Rd</sub> = {interpolated.M_Rd.toFixed(1)} kNm
-							</p>
-							<p>&epsilon;<sub>c</sub> = {interpolated.e_c.toFixed(3)} &permil;</p>
-							<p>&epsilon;<sub>s1</sub> = {interpolated.e_s1.toFixed(3)} &permil;</p>
-							<p>&epsilon;<sub>s2</sub> = {interpolated.e_s2.toFixed(3)} &permil;</p>
-							<p>&epsilon;<sub>p</sub> = {interpolated.e_p.toFixed(3)} &permil;</p>
-						</Col>
-					</Row>
+					<ResultsSection results={interpolated} />
 
 				</Col>
 			</Row>
