@@ -20,7 +20,7 @@ function LabeledField(props: { label: any, value: any }) {
 }
 
 
-function ResultsSection(props: { results: DataPoint }) {
+function ResultsSection(props: { results: DataPoint, showSpannglied: boolean }) {
 	const Field = ({ label, value, prec, unit }: any) => {
 		return <tr>
 			<td>{label}</td>
@@ -42,7 +42,7 @@ function ResultsSection(props: { results: DataPoint }) {
 					<Field label={<>&epsilon;<sub>c</sub></>} value={props.results.e_c} prec={3} unit={<>&permil;</>} />
 					<Field label={<>&epsilon;<sub>s1</sub></>} value={props.results.e_s1} prec={3} unit={<>&permil;</>} />
 					<Field label={<>&epsilon;<sub>s2</sub></>} value={props.results.e_s2} prec={3} unit={<>&permil;</>} />
-					<Field label={<>&epsilon;<sub>p</sub></>} value={props.results.e_p} prec={3} unit={<>&permil;</>} />
+					{props.showSpannglied && <Field label={<>&epsilon;<sub>p</sub></>} value={props.results.e_p} prec={3} unit={<>&permil;</>} />}
 				</tbody>
 			</table>
 		</Col>
@@ -148,7 +148,7 @@ export default function RechteckQS() {
 						<Graph data={MN_data_points} Rd={[interpolated.M_Rd, interpolated.N_Rd]} Ed={[M_Ed, N_Ed]} />
 					</React.Suspense>
 
-					<ResultsSection results={interpolated} />
+					<ResultsSection results={interpolated} showSpannglied={spanngliedActive} />
 
 				</Col>
 			</Row>
