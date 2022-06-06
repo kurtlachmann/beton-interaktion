@@ -41,7 +41,7 @@ export interface Data {
 }
 
 
-interface DataPoint {
+export interface DataPoint {
 	e_c: number
 	e_s1: number
 	e_s2: number

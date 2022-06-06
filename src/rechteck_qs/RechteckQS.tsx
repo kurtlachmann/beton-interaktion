@@ -5,7 +5,7 @@ import { BetonList } from './Beton';
 import { CrossSection } from './CrossSection';
 import { ObjSelector, ValSelector } from './Selector';
 import Input from './Input';
-import { BaustahlConfig, calc_data, Einwirkung, Querschnitt, SpannstahlConfig } from './math';
+import { BaustahlConfig, calc_data, DataPoint, Einwirkung, Querschnitt, SpannstahlConfig } from './math';
 import Section, { OptionalSection } from './Section';
 import { SpannstahlList } from './Spannstahl';
 
@@ -20,49 +20,33 @@ function LabeledField(props: { label: any, value: any }) {
 }
 
 
-function ResultsSection(props: any) {
-	const items = [
-		{
-			label: <>N<sub>Rd</sub></>,
-			value: props.results.N_Rd,
-			precision: 1,
-			unit: "kN"
-		}, {
-			label: <>M<sub>Rd</sub></>,
-			value: props.results.M_Rd,
-			precision: 1,
-			unit: "kNm"
-		}, {
-			label: <>&epsilon;<sub>c</sub></>,
-			value: props.results.e_c,
-			precision: 3,
-			unit: <>&permil;</>
-		}, {
-			label: <>&epsilon;<sub>s1</sub></>,
-			value: props.results.e_s1,
-			precision: 3,
-			unit: <>&permil;</>
-		}, {
-			label: <>&epsilon;<sub>s2</sub></>,
-			value: props.results.e_s2,
-			precision: 3,
-			unit: <>&permil;</>
-		}, {
-			label: <>&epsilon;<sub>p</sub></>,
-			value: props.results.e_p,
-			precision: 3,
-			unit: <>&permil;</>
-		}
-	]
-	return <>
-		{items.map(({ label, value, precision, unit }) =>
-			<Row xs="auto">
-				<Col style={{ minWidth: "60px" }}>{label}</Col>
-				<Col>=</Col>
-				<Col>{value.toFixed(precision)} {unit}</Col>
-			</Row>
-		)}
-	</>
+function ResultsSection(props: { results: DataPoint }) {
+	const Field = ({ label, value, prec, unit }: any) => {
+		return <tr>
+			<td>{label}</td>
+			<td style={{ paddingLeft: "10px", paddingRight: "10px" }}>=</td>
+			<td style={{ textAlign: "right" }}>{value.toFixed(prec)}</td>
+			<td>{unit}</td>
+		</tr>
+	}
+	return <Row style={{ display: "flex", justifyContent: "center", marginTop: "1em" }}>
+		<Col xs="auto" style={{ display: "flex", flexDirection: "row" }}>
+			<table style={{ display: "inline-block", marginRight: "50px" }}>
+				<tbody>
+					<Field label={<>N<sub>Rd</sub></>} value={props.results.N_Rd} prec={1} unit="kN" />
+					<Field label={<>M<sub>Rd</sub></>} value={props.results.M_Rd} prec={1} unit="kNm" />
+				</tbody>
+			</table>
+			<table>
+				<tbody>
+					<Field label={<>&epsilon;<sub>c</sub></>} value={props.results.e_c} prec={3} unit={<>&permil;</>} />
+					<Field label={<>&epsilon;<sub>s1</sub></>} value={props.results.e_s1} prec={3} unit={<>&permil;</>} />
+					<Field label={<>&epsilon;<sub>s2</sub></>} value={props.results.e_s2} prec={3} unit={<>&permil;</>} />
+					<Field label={<>&epsilon;<sub>p</sub></>} value={props.results.e_p} prec={3} unit={<>&permil;</>} />
+				</tbody>
+			</table>
+		</Col>
+	</Row>
 }
 
 
