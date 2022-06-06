@@ -138,7 +138,7 @@ export default function RechteckQS() {
 					<Section title="Einwirkung">
 						<Input label={<>N<sub>Ed</sub></>} defaultValue={N_Ed} unit="kN" setValue={set_N_Ed} />
 						<Input label={<>M<sub>Ed</sub></>} defaultValue={M_Ed} unit="kNm" setValue={set_M_Ed} />
-						<LabeledField label={<>&epsilon;<sub>p</sub><sup>(0)</sup></>} value={<>{e_p0.toFixed(3)} &permil;</>} />
+						{spanngliedActive && <LabeledField label={<>&epsilon;<sub>p</sub><sup>(0)</sup></>} value={<>{e_p0.toFixed(3)} &permil;</>} />}
 					</Section>
 
 				</Col>
