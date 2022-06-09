@@ -106,13 +106,13 @@ export default function RechteckQS() {
 		</Navbar>
 
 		<Container style={{ marginBottom: "1em" }} fluid>
-			<Row className="justify-content-md-center" style={{ marginTop: "2em" }}>
-				<Col xl={2}>
+			<Row style={{ marginTop: "2em", display: "flex", justifyContent: "center" }}>
+				<Col xl="auto">
 					<div style={{ marginTop: "1em", marginBottom: "1.5em" }}>
 						<CrossSection />
 					</div>
 				</Col>
-				<Col xs={{ order: 2, span: 12 }} md={{ order: 1, span: 6 }} lg={{ order: 1, span: 4 }} xl={{ order: 1, span: 2 }}>
+				<Col xs={12} md={6} lg={4} xl={2} style={{ width: "350px" }}>
 
 					<Section title="Querschnitt">
 						<ObjSelector label="Beton" options={BetonList} setValue={setBeton} />
@@ -142,7 +142,7 @@ export default function RechteckQS() {
 					</Section>
 
 				</Col>
-				<Col xs={{ order: 1, span: 12 }} md={{ order: 2, span: 6 }} lg={{ order: 2, span: 8 }} xl={{ order: 1, span: 6 }} style={{ paddingLeft: "2em" }}>
+				<Col xs={12} md={12} lg={8} xl={6} style={{ paddingLeft: "2em" }}>
 
 					<React.Suspense fallback={<div />}>
 						<Graph data={MN_data_points} Rd={[interpolated.M_Rd, interpolated.N_Rd]} Ed={[M_Ed, N_Ed]} />
