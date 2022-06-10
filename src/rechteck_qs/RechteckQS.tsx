@@ -109,7 +109,7 @@ export default function RechteckQS() {
 			<Row style={{ marginTop: "2em", display: "flex", justifyContent: "center" }}>
 				<Col xl="auto">
 					<div style={{ marginTop: "1em", marginBottom: "1.5em" }}>
-						<CrossSection />
+						<CrossSection showSpannglied={spanngliedActive} />
 					</div>
 				</Col>
 				<Col xs={12} md={6} lg={4} xl={2} style={{ width: "350px" }}>

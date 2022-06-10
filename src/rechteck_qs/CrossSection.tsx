@@ -1,7 +1,19 @@
 import { Card } from "react-bootstrap";
 
 
-export function CrossSection() {
+export enum CrossSectionElement {
+	HEIGHT,
+	WIDTH,
+	A_S1,
+	A_S2,
+	A_P,
+	D_1,
+	D_2,
+	D_P
+}
+
+
+export function CrossSection(props: {activeElement?: CrossSectionElement, showSpannglied?: boolean}) {
 	const padding = {
 		top: 10,
 		bottom: 35,
@@ -30,8 +42,10 @@ export function CrossSection() {
 			<Text x={padding.left + width + 25} y={padding.top + height - baustahl_margin/2} text="d" sub="1" />
 			<line x1={padding.left + width + 10} x2={padding.left + width + 10} y1={padding.top + height - baustahl_margin} y2={padding.top + height} stroke="#000" />
 
-			<Text x={padding.left + width + 65} y={padding.top + height - height*(1-0.6)*0.5} text="d" sub="p" />
-			<line x1={padding.left + width + 50} x2={padding.left + width + 50} y1={padding.top + height*0.6} y2={padding.top + height} stroke="#000" />
+			{props.showSpannglied && <>
+				<Text x={padding.left + width + 65} y={padding.top + height - height*(1-0.6)*0.5} text="d" sub="p" />
+				<line x1={padding.left + width + 50} x2={padding.left + width + 50} y1={padding.top + height*0.6} y2={padding.top + height} stroke="#000" />
+			</>}
 
 			{/* Content inside the rect */}
 			<BaustahlCircle x={padding.left + baustahl_margin} y={padding.top + baustahl_margin} />
@@ -40,8 +54,10 @@ export function CrossSection() {
 			<BaustahlCircle x={padding.left + 4*baustahl_margin} y={padding.top + baustahl_margin} />
 			<Text x={padding.left + width*0.5} y={padding.top + baustahl_margin + 25} text="A" sub="s2" />
 
-			<Text x={padding.left + width/2} y={padding.top + height * 0.6 - 30} text="A" sub="p" />
-			<SpannstahlCircle x={padding.left + width / 2} y={padding.top + height * 0.6} />
+			{props.showSpannglied && <>
+				<Text x={padding.left + width/2} y={padding.top + height * 0.6 - 30} text="A" sub="p" />
+				<SpannstahlCircle x={padding.left + width / 2} y={padding.top + height * 0.6} />
+			</>}
 
 			<Text x={padding.left + width*0.5} y={padding.top + height - baustahl_margin - 25} text="A" sub="s1" />
 			<BaustahlCircle x={padding.left + baustahl_margin} y={padding.top + height - baustahl_margin} />
@@ -53,8 +69,8 @@ export function CrossSection() {
 }
 
 
-function Text(props: {x: number, y: number, text: string, sub?: string}) {
-	return <text x={props.x} y={props.y} dominantBaseline="middle" textAnchor="middle">
+function Text(props: {x: number, y: number, text: string, sub?: string, color?: string, active?: boolean}) {
+	return <text x={props.x} y={props.y} dominantBaseline="middle" textAnchor="middle" fill={props.active ? "#f00" : "#000"} fontWeight={props.active ? "bold" : "normal"}>
 		{props.text}
 		<tspan baselineShift="sub" style={{fontSize: "0.7em"}}>{props.sub}</tspan>
 	</text>
