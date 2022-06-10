@@ -10,8 +10,7 @@ function App() {
   return (
     <React.Fragment>
       <Routes>
-        <Route path='/' element={<Home/>} />
-        <Route path='/rechteck_qs' element={<RechteckQS/>} />
+        <Route path='/' element={<RechteckQS/>} />
       </Routes>
     </React.Fragment>
   );
