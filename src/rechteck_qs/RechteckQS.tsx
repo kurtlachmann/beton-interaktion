@@ -98,6 +98,8 @@ export default function RechteckQS() {
 
 	const e_p0 = A_p === 0 ? 0 : 1000 * (N_Ed / A_p) / (0.1 * E_p);
 
+	const [highlightedElement, setHighlightedElement] = useState("");
+
 	return <>
 		<Navbar bg="dark" expand="lg">
 			<Container>
@@ -110,6 +112,7 @@ export default function RechteckQS() {
 				<Col xl="auto">
 					<div style={{ marginTop: "1em", marginBottom: "1.5em" }}>
 						<CrossSection showSpannglied={spanngliedActive} />
+						{highlightedElement}
 					</div>
 				</Col>
 				<Col xs={12} md={6} lg={4} xl={2} style={{ width: "350px" }}>
@@ -122,22 +125,22 @@ export default function RechteckQS() {
 
 					<Section title="Bewehrung">
 						<ObjSelector label="Stahl" options={BaustahlList} setValue={() => { }} />
-						<Input label={<>A<sub>s1</sub></>} defaultValue={A_s1} unit="cm2" setValue={set_A_s1} />
-						<Input label={<>d<sub>1</sub></>} defaultValue={d_1} unit="cm" setValue={set_d_1} />
-						<Input label={<>A<sub>s2</sub></>} defaultValue={A_s2} unit="cm2" setValue={set_A_s2} />
-						<Input label={<>d<sub>2</sub></>} defaultValue={d_2} unit="cm" setValue={set_d_2} />
+						<Input label={"A_{s1}"} defaultValue={A_s1} unit="cm2" setValue={set_A_s1} />
+						<Input label={"d_{1}"} defaultValue={d_1} unit="cm" setValue={set_d_1} />
+						<Input label={"A_{s2}"} defaultValue={A_s2} unit="cm2" setValue={set_A_s2} />
+						<Input label={"d_{2}"} defaultValue={d_2} unit="cm" setValue={set_d_2} />
 					</Section>
 
 					<OptionalSection title="Spannglied" active={spanngliedActive} setActive={setSpanngliedActive}>
 						<ObjSelector label="Stahl" options={SpannstahlList} setValue={setStahl} />
 						<ValSelector label={<>E<sub>p</sub></>} options={[195000, 205000]} unit="N/mm2" setValue={set_E_p} />
-						<Input label={<>A<sub>p</sub></>} defaultValue={A_p} unit="cm2" setValue={set_A_p} />
-						<Input label={<>d<sub>p</sub></>} defaultValue={d_p} unit="cm" setValue={set_d_p} />
+						<Input label={"A_{p}"} defaultValue={A_p} unit="cm2" setValue={set_A_p} />
+						<Input label={"d_{p}"} defaultValue={d_p} unit="cm" setValue={set_d_p} />
 					</OptionalSection>
 
 					<Section title="Einwirkung">
-						<Input label={<>N<sub>Ed</sub></>} defaultValue={N_Ed} unit="kN" setValue={set_N_Ed} />
-						<Input label={<>M<sub>Ed</sub></>} defaultValue={M_Ed} unit="kNm" setValue={set_M_Ed} />
+						<Input label={"N_{Ed}"} defaultValue={N_Ed} unit="kN" setValue={set_N_Ed} />
+						<Input label={"M_{Ed}"} defaultValue={M_Ed} unit="kNm" setValue={set_M_Ed} />
 						{spanngliedActive && <LabeledField label={<>&epsilon;<sub>p</sub><sup>(0)</sup></>} value={<>{e_p0.toFixed(3)} &permil;</>} />}
 					</Section>
 
