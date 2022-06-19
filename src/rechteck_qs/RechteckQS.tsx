@@ -98,8 +98,6 @@ export default function RechteckQS() {
 
 	const e_p0 = A_p === 0 ? 0 : 1000 * (N_Ed / A_p) / (0.1 * E_p);
 
-	const [highlightedElement, setHighlightedElement] = useState("");
-
 	return <>
 		<Navbar bg="dark" expand="lg">
 			<Container>
@@ -112,7 +110,6 @@ export default function RechteckQS() {
 				<Col xl="auto">
 					<div style={{ marginTop: "1em", marginBottom: "1.5em" }}>
 						<CrossSection showSpannglied={spanngliedActive} />
-						{highlightedElement}
 					</div>
 				</Col>
 				<Col xs={12} md={6} lg={4} xl={2} style={{ width: "350px" }}>
