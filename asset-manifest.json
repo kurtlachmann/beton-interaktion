@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/beton-interaktion/static/css/main.15e4853d.css",
-    "main.js": "/beton-interaktion/static/js/main.0c02fc43.js",
+    "main.css": "/beton-interaktion/static/css/main.ab5e53b3.css",
+    "main.js": "/beton-interaktion/static/js/main.e67613dc.js",
     "static/js/856.e13797c4.chunk.js": "/beton-interaktion/static/js/856.e13797c4.chunk.js",
     "static/js/787.6413789e.chunk.js": "/beton-interaktion/static/js/787.6413789e.chunk.js",
     "static/js/496.c81a18da.chunk.js": "/beton-interaktion/static/js/496.c81a18da.chunk.js",
     "index.html": "/beton-interaktion/index.html",
-    "main.15e4853d.css.map": "/beton-interaktion/static/css/main.15e4853d.css.map",
-    "main.0c02fc43.js.map": "/beton-interaktion/static/js/main.0c02fc43.js.map",
+    "main.ab5e53b3.css.map": "/beton-interaktion/static/css/main.ab5e53b3.css.map",
+    "main.e67613dc.js.map": "/beton-interaktion/static/js/main.e67613dc.js.map",
     "856.e13797c4.chunk.js.map": "/beton-interaktion/static/js/856.e13797c4.chunk.js.map",
     "787.6413789e.chunk.js.map": "/beton-interaktion/static/js/787.6413789e.chunk.js.map",
     "496.c81a18da.chunk.js.map": "/beton-interaktion/static/js/496.c81a18da.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.15e4853d.css",
-    "static/js/main.0c02fc43.js"
+    "static/css/main.ab5e53b3.css",
+    "static/js/main.e67613dc.js"
   ]
 }
