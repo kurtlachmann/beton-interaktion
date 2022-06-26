@@ -157,5 +157,5 @@ function getMinMaxX(series: GraphSeries) {
 export default function Graph(props: GraphProps) {
 	const series = makeSeries(props);
 	let [x_min, x_max] = getMinMaxX(series);
-	return <Chart options={getGraphOptions(x_min, x_max)} series={series as any} type="line" />
+	return <Chart options={getGraphOptions(x_min, x_max)} series={series} type="line" />
 }
