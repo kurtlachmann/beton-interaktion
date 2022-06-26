@@ -4,10 +4,8 @@
 name: Update Statistics
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  schedule:
+    - cron: '0 1 * * *'  # Run at 01:00 UTC, i.e. 02:00 CET or 03:00 CEST
 
 jobs:
   build:
