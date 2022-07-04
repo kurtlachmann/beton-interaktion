@@ -20,9 +20,11 @@ export class Spannstahl implements SelectionOption {
 export const st1375 = new Spannstahl("St 1375/1570", 1360, 1570);
 export const st1470 = new Spannstahl("St 1470/1670", 1420, 1670);
 export const st1570 = new Spannstahl("St 1570/1770", 1500, 1770);
+export const st1660 = new Spannstahl("St 1660/1860", 1600, 1860);
 
 export const SpannstahlList: Spannstahl[] = [
 	st1375,
 	st1470,
 	st1570,
+	st1660,
 ]
