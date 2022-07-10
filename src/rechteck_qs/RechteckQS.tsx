@@ -101,7 +101,7 @@ export default function RechteckQS() {
 	return <>
 		<Navbar bg="dark" expand="lg">
 			<Container>
-				<Navbar.Brand href="/beton-interaktion" style={{ color: "#fff" }}>Rechteck Querschnitt</Navbar.Brand>
+				<Navbar.Brand href="/" style={{ color: "#fff" }}>Rechteck Querschnitt</Navbar.Brand>
 			</Container>
 		</Navbar>
 
