@@ -1,18 +1,6 @@
 import { Card } from "react-bootstrap";
 
 
-export enum CrossSectionElement {
-	HEIGHT,
-	WIDTH,
-	A_S1,
-	A_S2,
-	A_P,
-	D_1,
-	D_2,
-	D_P
-}
-
-
 let lastHighlighted: string = "";
 
 
@@ -59,7 +47,7 @@ export function resetHighlight() {
 }
 
 
-export function CrossSection(props: {activeElement?: CrossSectionElement, showSpannglied?: boolean}) {
+export function CrossSection(props: {showSpannglied?: boolean}) {
 	const padding = {
 		top: 10,
 		bottom: 35,
