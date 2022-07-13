@@ -1,5 +1,7 @@
 import { ApexOptions } from "apexcharts";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Chart from "react-apexcharts";
+import { propTypes } from "react-bootstrap/esm/Image";
 
 
 export interface GraphProps {
@@ -155,7 +157,24 @@ function getMinMaxX(series: GraphSeries) {
 
 
 export default function Graph(props: GraphProps) {
-	const series = makeSeries(props);
-	let [x_min, x_max] = getMinMaxX(series);
-	return <Chart options={getGraphOptions(x_min, x_max)} series={series} type="line" />
+	let [component, setComponent] = useState(<div></div>);
+	const timeoutRef: { current: NodeJS.Timeout | null } = useRef(null);
+
+	useEffect(() => {
+		// Rendering the graph takes some time. Wait a bit if the input changes again. Once the user
+		// has stopped typing we actually start rendering.
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+		}
+		timeoutRef.current = setTimeout(() => {
+			timeoutRef.current = null;
+			const series = makeSeries(props);
+			let [x_min, x_max] = getMinMaxX(series);
+			const options = getGraphOptions(x_min, x_max);
+			setComponent(<Chart options={options} series={series} type="line" />);
+		}, 1000);
+		return () => {if (timeoutRef.current) clearTimeout(timeoutRef.current)};
+	}, [props]);
+
+	return <>{component}</>
 }
