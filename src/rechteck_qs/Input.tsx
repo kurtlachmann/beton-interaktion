@@ -13,17 +13,9 @@ export interface InputProps {
 }
 
 
-// Stores the handle to the last call to setTimeout()
-let timeout_handle: NodeJS.Timeout;
-
 export default function Input(props: InputProps) {
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		// Trigger the real real change after a slight delay so that the UI doesn't freeze after
-		// every input event.
-		if (timeout_handle) clearTimeout(timeout_handle);
-		timeout_handle = setTimeout(() => {
-			props.setValue(parseFloat(event.target.value));
-		}, 1200);
+		props.setValue(parseFloat(event.target.value));
 	};
 
 	const handleFocus = () => highlightElement(props.label);
