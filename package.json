@@ -33,8 +33,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build -m 'Auto-generated deployment commit'",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "updateStats": "node src/stats/updateStats.js"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
