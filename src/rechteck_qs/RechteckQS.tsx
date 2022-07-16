@@ -60,14 +60,14 @@ export default function RechteckQS() {
 	const [A_s1, set_A_s1] = useState(15.0);
 	const [A_s2, set_A_s2] = useState(5.0);
 	const [d_1, set_d_1] = useState(10.0);
-	const [d_2, set_d_2] = useState(5.0);
+	const [d_2, set_d_2] = useState(10.0);
 
 	// Spannstahl input
 	const [spanngliedActive, setSpanngliedActive] = useState(false);
 	const [stahl, setStahl] = useState(SpannstahlList[0]);
 	const [E_p, set_E_p] = useState(195000.0);
 	const [A_p, set_A_p] = useState(10.0);
-	const [d_p, set_d_p] = useState(10.0);
+	const [d_p, set_d_p] = useState(30.0);
 
 	// Einwirkung input
 	const [N_Ed, set_N_Ed] = useState(1000.0);
@@ -107,9 +107,9 @@ export default function RechteckQS() {
 
 		<Container style={{ marginBottom: "1em" }} fluid>
 			<Row style={{ marginTop: "2em", display: "flex", justifyContent: "center" }}>
-				<Col xl="auto">
+				<Col xs={12} md={2}>
 					<div style={{ marginTop: "1em", marginBottom: "1.5em" }}>
-						<CrossSection showSpannglied={spanngliedActive} />
+						<CrossSection width={b} height={h} d_1={d_1} d_2={d_2} d_p={d_p} showBewehrungOben={A_s2 > 0} showBewehrungUnten={A_s1 > 0} showSpannglied={spanngliedActive} />
 					</div>
 				</Col>
 				<Col xs={12} md={6} lg={4} xl={2} style={{ width: "350px" }}>

@@ -1,4 +1,4 @@
-import { Card } from "react-bootstrap";
+import { useEffect, useState } from "react";
 
 
 let lastHighlighted: string = "";
@@ -20,9 +20,8 @@ export function highlightElement(id: string) {
 		lineElement.setAttribute("stroke", "#f00");
 	}
 
-	for (const circleElement of document.getElementsByClassName("circle-" + id)) {
-		circleElement.setAttribute("stroke", "#f00");
-		circleElement.setAttribute("fill", "#faa");
+	for (const element of document.getElementsByClassName("elem-" + id)) {
+		element.setAttribute("stroke", "#f00");
 	}
 
 	lastHighlighted = id;
@@ -31,105 +30,114 @@ export function highlightElement(id: string) {
 
 export function resetHighlight() {
 	for (const element of document.getElementsByClassName("text-" + lastHighlighted)) {
-		element.setAttribute("fill", "#000");
+		element.setAttribute("fill", "#888");
 		element.setAttribute("stroke", "none");
 		element.setAttribute("font-weight", "normal");
 	}
 
 	for (const lineElement of document.getElementsByClassName("line-" + lastHighlighted)) {
-		lineElement.setAttribute("stroke", "#000");
+		lineElement.setAttribute("stroke", "#888");
 	}
 
-	for (const circleElement of document.getElementsByClassName("circle-" + lastHighlighted)) {
-		circleElement.setAttribute("stroke", "#666");
-		circleElement.setAttribute("fill", "#aaa");
+	for (const element of document.getElementsByClassName("elem-" + lastHighlighted)) {
+		element.setAttribute("stroke", "#000");
+		element.setAttribute("font-weight", "normal");
 	}
 }
 
 
-export function CrossSection(props: {showSpannglied?: boolean}) {
-	const padding = {
-		top: 10,
-		bottom: 35,
-		left: 35,
-		right: 80,
-	};
-	const width = 150;
-	const height = 250;
-	const stroke_width = 2;
-
-	const baustahl_margin = width / 5;
-	return <>
-		<svg width={width + stroke_width + padding.left + padding.right} height={height + stroke_width + padding.top + padding.bottom} style={{display: "block", margin: "auto"}}>
-			<rect x={stroke_width/2 + padding.left} y={stroke_width/2 + padding.top} width={width} height={height} stroke="#666" strokeWidth={stroke_width} fill="#eee" />
-
-			{/* Labels on the sides */}
-			<line className="line-h" x1={padding.left - 10} x2={padding.left - 10} y1={padding.top} y2={padding.top + height} stroke="#000" />
-			<Text className="text-h" x={padding.left - 25} y={padding.top + height / 2} text="h" />
-
-			<Text className="text-b" x={padding.left + width/2} y={padding.top + height + 25} text="b" />
-			<line className="line-b" x1={padding.left} x2={padding.left + width} y1={padding.top + height + 10} y2={padding.top + height + 10} stroke="#000" />
-
-			<Text className="text-d2" x={padding.left + width + 25} y={padding.top + baustahl_margin/2} text="d" sub="2" />
-			<line className="line-d2" x1={padding.left + width + 10} x2={padding.left + width + 10} y1={padding.top} y2={padding.top + baustahl_margin} stroke="#000" />
-
-			<Text className="text-d1" x={padding.left + width + 25} y={padding.top + height - baustahl_margin/2} text="d" sub="1" />
-			<line className="line-d1" x1={padding.left + width + 10} x2={padding.left + width + 10} y1={padding.top + height - baustahl_margin} y2={padding.top + height} stroke="#000" />
-
-			{props.showSpannglied && <>
-				<Text className="text-dp" x={padding.left + width + 65} y={padding.top + height - height*(1-0.6)*0.5} text="d" sub="p" />
-				<line className="line-dp" x1={padding.left + width + 50} x2={padding.left + width + 50} y1={padding.top + height*0.6} y2={padding.top + height} stroke="#000" />
-			</>}
-
-			{/* Content inside the rect */}
-			<BaustahlCircle className="circle-As2" x={padding.left + baustahl_margin} y={padding.top + baustahl_margin} />
-			<BaustahlCircle className="circle-As2" x={padding.left + 2*baustahl_margin} y={padding.top + baustahl_margin} />
-			<BaustahlCircle className="circle-As2" x={padding.left + 3*baustahl_margin} y={padding.top + baustahl_margin} />
-			<BaustahlCircle className="circle-As2" x={padding.left + 4*baustahl_margin} y={padding.top + baustahl_margin} />
-			<Text className="text-As2" x={padding.left + width*0.5} y={padding.top + baustahl_margin + 25} text="A" sub="s2" />
-
-			{props.showSpannglied && <>
-				<Text className="text-Ap" x={padding.left + width/2} y={padding.top + height * 0.6 - 30} text="A" sub="p" />
-				<SpannstahlCircle className="circle-Ap" x={padding.left + width / 2} y={padding.top + height * 0.6} />
-			</>}
-
-			<Text className="text-As1" x={padding.left + width*0.5} y={padding.top + height - baustahl_margin - 25} text="A" sub="s1" />
-			<BaustahlCircle className="circle-As1" x={padding.left + baustahl_margin} y={padding.top + height - baustahl_margin} />
-			<BaustahlCircle className="circle-As1" x={padding.left + 2*baustahl_margin} y={padding.top + height - baustahl_margin} />
-			<BaustahlCircle className="circle-As1" x={padding.left + 3*baustahl_margin} y={padding.top + height - baustahl_margin} />
-			<BaustahlCircle className="circle-As1" x={padding.left + 4*baustahl_margin} y={padding.top + height - baustahl_margin} />
-		</svg>
-	</>
+export interface CrossSectionProps {
+	width: number,
+	height: number,
+	d_1: number,
+	d_2: number,
+	d_p: number,
+	showBewehrungOben?: boolean,
+	showBewehrungUnten?: boolean,
+	showSpannglied?: boolean
 }
 
 
-function Text(props: {className: string, x: number, y: number, text: string, sub?: string, color?: string}) {
-	return <text className={props.className} x={props.x} y={props.y} dominantBaseline="middle" textAnchor="middle" >
+export function CrossSection(props: CrossSectionProps) {
+	let [viewBoxHeight, setViewBoxHeight] = useState(200);
+
+	const maxWidth = 50;
+	const maxHeight = 180
+	const stroke_width = 0.5;
+
+	const whRatio = props.width / props.height;
+	const maxWhRatio = maxWidth / maxHeight;
+	const width = whRatio > maxWhRatio ? maxWidth : whRatio * maxHeight;
+	const height = whRatio > maxWhRatio ? maxWidth / whRatio : maxHeight;
+
+	const marginTop = 5;
+	const bwrgMargin = width * 0.18;  // Abstand Bewehrung links/rechts
+	const spglSize = 2;  // Größe Spannglied
+	const labelsMargin = 5;
+
+	console.log("height", height, "whRatio", whRatio, "maxWhRatio", maxWhRatio);
+
+	// Adjust viewbox height to the actually used space once the animation is finished. This makes
+	// sure that on mobile there's no empty space between the svg and the input fields.
+	useEffect(() => {
+		// Increasing height should happen instant. Decreasing must wait until animation is done.
+		const delay = height > viewBoxHeight ? 0 : 500;
+		const handle = setTimeout(() => {
+			setViewBoxHeight(height + 20);  // Add some margin to fit the labels
+		}, delay);
+		return () => { clearTimeout(handle) };
+	}, [props.width, props.height]);
+
+	return <svg viewBox={`0 0 100 ${viewBoxHeight}`} style={{ backgroundColor: "#fff", transition: "all 0.5s" }} >
+		<rect x={(100 - width) / 2} y={marginTop} width={width} height={height} stroke="#666" strokeWidth={stroke_width} fill="#eee" style={{ transition: "all 0.5s" }} />
+
+		{/* Bewehrung oben */}
+		<g opacity={props.showBewehrungOben ? 1 : 0} style={{ transition: "all 0.5s" }}>
+			<Line className="elem-As2" x1={(100 - width) / 2 + bwrgMargin} y1={marginTop + props.d_2} x2={(100 + width) / 2 - bwrgMargin} y2={marginTop + props.d_2} />
+		</g>
+
+		{/* Bewehrung unten */}
+		<g opacity={props.showBewehrungUnten ? 1 : 0} style={{ transition: "all 0.5s" }}>
+			<Line className="elem-As1" x1={(100 - width) / 2 + bwrgMargin} y1={marginTop + height - props.d_1} x2={(100 + width) / 2 - bwrgMargin} y2={marginTop + height - props.d_1} />
+		</g>
+
+		{/* Spannglied */}
+		<g opacity={props.showSpannglied ? 1 : 0} style={{ transition: "all 0.5s" }}>
+			<Line className="elem-Ap" x1={50 - spglSize} y1={marginTop + height - props.d_p + spglSize} x2={50 + spglSize} y2={marginTop + height - props.d_p - spglSize} />
+			<Line className="elem-Ap" x1={50 - spglSize} y1={marginTop + height - props.d_p - spglSize} x2={50 + spglSize} y2={marginTop + height - props.d_p + spglSize} />
+
+			{/* Label */}
+			<Line className="line-dp" x1={(100 + width) / 2 + labelsMargin + 10} y1={marginTop + height - props.d_p} x2={(100 + width) / 2 + labelsMargin + 10} y2={marginTop + height} stroke="#888" strokeWidth={0.3} />
+			<Text className="text-dp" x={(100 + width) / 2 + labelsMargin + 15} y={marginTop + height - (props.d_p / 2)} text="d" sub="p" color="#888" />
+		</g>
+
+		{/* Label h */}
+		<Line className="line-h" x1={(100 - width) / 2 - labelsMargin} y1={marginTop} x2={(100 - width) / 2 - labelsMargin} y2={marginTop + height} stroke="#888" strokeWidth={0.3} />
+		<Text className="text-h" x={(100 - width) / 2 - labelsMargin - 4} y={marginTop + height / 2} text="h" color="#888" />
+
+		{/* Label b */}
+		<Line className="line-b" x1={(100 - width) / 2} y1={marginTop + height + labelsMargin} x2={(100 + width) / 2} y2={marginTop + height + labelsMargin} stroke="#888" strokeWidth={0.3} />
+		<Text className="text-b" x={50} y={marginTop + height + labelsMargin + 6} text="b" color="#888" />
+
+		{/* Label d_1 */}
+		<Line className="line-d1" x1={(100 + width) / 2 + labelsMargin} y1={marginTop + height - props.d_1} x2={(100 + width) / 2 + labelsMargin} y2={marginTop + height} stroke="#888" strokeWidth={0.3} />
+		<Text className="text-d1" x={(100 + width) / 2 + labelsMargin + 4.5} y={marginTop + height - (props.d_1 / 2)} text="d" sub="1" color="#888" />
+
+		{/* Label d_2 */}
+		<Line className="line-d2" x1={(100 + width) / 2 + labelsMargin} y1={marginTop} x2={(100 + width) / 2 + labelsMargin} y2={marginTop + props.d_2} stroke="#888" strokeWidth={0.3} />
+		<Text className="text-d2" x={(100 + width) / 2 + labelsMargin + 4.5} y={marginTop + (props.d_2 / 2)} text="d" sub="2" color="#888" />
+	</svg>
+}
+
+
+function Line(props: { className?: string, x1: number, y1: number, x2: number, y2: number, stroke?: string, strokeWidth?: number }) {
+	return <path className={props.className} d={`M ${props.x1},${props.y1} L ${props.x2},${props.y2}`} style={{ transition: "d 0.5s" }} stroke={props.stroke || "#000"} strokeWidth={props.strokeWidth || 0.5} />
+}
+
+
+function Text(props: { className: string, x: number, y: number, text: string, sub?: string, color?: string }) {
+	return <text className={props.className} dominantBaseline="middle" textAnchor="middle" style={{ fontSize: "4.3", transition: "transform 0.5s" }} fill={props.color} transform={`translate(${props.x}, ${props.y})`} >
 		{props.text}
-		<tspan baselineShift="sub" style={{fontSize: "0.7em"}}>{props.sub}</tspan>
+		<tspan baselineShift="sub" style={{ fontSize: "0.7em" }}>{props.sub}</tspan>
 	</text>
-}
-
-
-function BaustahlCircle(props: {className: string, x: number, y: number}) {
-	return <circle className={props.className} cx={props.x} cy={props.y} r={6} stroke="#666" strokeWidth={2} fill="#aaa" />
-}
-
-
-function SpannstahlCircle(props: {className: string, x: number, y: number}) {
-	return <circle className={props.className} cx={props.x} cy={props.y} r={12} stroke={"#666"} strokeWidth={2} fill={"#aaa"} />
-}
-
-
-export default function CrossSectionCard() {
-	return <Card style={{ marginTop: "1em", marginBottom: "0em" }}>
-		<Card.Header style={{ display: "flex", alignItems: "center" }}>
-			Querschnitt
-		</Card.Header>
-
-		<Card.Body style={{ display: "flex", justifyContent: "center" }}>
-			<CrossSection />
-		</Card.Body>
-
-	</Card>
 }
