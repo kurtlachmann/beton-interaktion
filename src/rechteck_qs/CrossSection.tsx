@@ -58,11 +58,36 @@ export interface CrossSectionProps {
 }
 
 
+function getWindowDimensions() {
+	const { innerWidth: width, innerHeight: height } = window;
+	return {
+		width,
+		height
+	};
+}
+
+export default function useWindowDimensions() {
+	const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions());
+
+	useEffect(() => {
+		function handleResize() {
+			setWindowDimensions(getWindowDimensions());
+		}
+
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
+
+	return windowDimensions;
+}
+
+
 export function CrossSection(props: CrossSectionProps) {
-	let [viewBoxHeight, setViewBoxHeight] = useState(200);
+	const dimensions = useWindowDimensions();
+	const smallScreen = dimensions.width < 1200;
 
 	const maxWidth = 50;
-	const maxHeight = 180
+	const maxHeight = smallScreen ? 100 : 180;
 	const stroke_width = 0.5;
 
 	const whRatio = props.width / props.height;
@@ -75,20 +100,7 @@ export function CrossSection(props: CrossSectionProps) {
 	const spglSize = 2;  // Größe Spannglied
 	const labelsMargin = 5;
 
-	console.log("height", height, "whRatio", whRatio, "maxWhRatio", maxWhRatio);
-
-	// Adjust viewbox height to the actually used space once the animation is finished. This makes
-	// sure that on mobile there's no empty space between the svg and the input fields.
-	useEffect(() => {
-		// Increasing height should happen instant. Decreasing must wait until animation is done.
-		const delay = height > viewBoxHeight ? 0 : 500;
-		const handle = setTimeout(() => {
-			setViewBoxHeight(height + 20);  // Add some margin to fit the labels
-		}, delay);
-		return () => { clearTimeout(handle) };
-	}, [props.width, props.height]);
-
-	return <svg viewBox={`0 0 100 ${viewBoxHeight}`} style={{ backgroundColor: "#fff", transition: "all 0.5s" }} >
+	return <svg viewBox={`0 0 100 ${maxHeight + 20}`} style={{ backgroundColor: "#fff", transition: "all 0.5s" }} >
 		<rect x={(100 - width) / 2} y={marginTop} width={width} height={height} stroke="#666" strokeWidth={stroke_width} fill="#eee" style={{ transition: "all 0.5s" }} />
 
 		{/* Bewehrung oben */}

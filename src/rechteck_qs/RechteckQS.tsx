@@ -107,7 +107,7 @@ export default function RechteckQS() {
 
 		<Container style={{ marginBottom: "1em" }} fluid>
 			<Row style={{ marginTop: "2em", display: "flex", justifyContent: "center" }}>
-				<Col xs={12} md={2}>
+				<Col xs={12} md={6} xl={2}>
 					<div style={{ marginTop: "1em", marginBottom: "1.5em" }}>
 						<CrossSection width={b} height={h} d_1={d_1} d_2={d_2} d_p={d_p} showBewehrungOben={A_s2 > 0} showBewehrungUnten={A_s1 > 0} showSpannglied={spanngliedActive} />
 					</div>
@@ -142,7 +142,7 @@ export default function RechteckQS() {
 					</Section>
 
 				</Col>
-				<Col xs={12} md={12} lg={8} xl={6} style={{ paddingLeft: "2em" }}>
+				<Col xs={12} lg={8} xl={6} style={{ paddingLeft: "2em" }}>
 
 					<React.Suspense fallback={<div />}>
 						<Graph data={MN_data_points} Rd={[interpolated.M_Rd, interpolated.N_Rd]} Ed={[M_Ed, N_Ed]} />
