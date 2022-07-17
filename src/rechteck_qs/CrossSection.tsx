@@ -94,6 +94,7 @@ export function CrossSection(props: CrossSectionProps) {
 	const maxWhRatio = maxWidth / maxHeight;
 	const width = whRatio > maxWhRatio ? maxWidth : whRatio * maxHeight;
 	const height = whRatio > maxWhRatio ? maxWidth / whRatio : maxHeight;
+	const yScale = height / props.height;
 
 	const marginTop = 5;
 	const bwrgMargin = width * 0.18;  // Abstand Bewehrung links/rechts
@@ -105,22 +106,30 @@ export function CrossSection(props: CrossSectionProps) {
 
 		{/* Bewehrung oben */}
 		<g opacity={props.showBewehrungOben ? 1 : 0} style={{ transition: "all 0.5s" }}>
-			<Line className="elem-As2" x1={(100 - width) / 2 + bwrgMargin} y1={marginTop + props.d_2} x2={(100 + width) / 2 - bwrgMargin} y2={marginTop + props.d_2} />
+			<Line className="elem-As2" x1={(100 - width) / 2 + bwrgMargin} y1={marginTop + props.d_2 * yScale} x2={(100 + width) / 2 - bwrgMargin} y2={marginTop + props.d_2 * yScale} />
+
+			{/* Label d_2 */}
+			<Line className="line-d2" x1={(100 + width) / 2 + labelsMargin} y1={marginTop} x2={(100 + width) / 2 + labelsMargin} y2={marginTop + props.d_2 * yScale} stroke="#888" strokeWidth={0.3} />
+			<Text className="text-d2" x={(100 + width) / 2 + labelsMargin + 4.5} y={marginTop + (yScale * props.d_2 / 2)} text="d" sub="2" color="#888" />
 		</g>
 
 		{/* Bewehrung unten */}
 		<g opacity={props.showBewehrungUnten ? 1 : 0} style={{ transition: "all 0.5s" }}>
-			<Line className="elem-As1" x1={(100 - width) / 2 + bwrgMargin} y1={marginTop + height - props.d_1} x2={(100 + width) / 2 - bwrgMargin} y2={marginTop + height - props.d_1} />
+			<Line className="elem-As1" x1={(100 - width) / 2 + bwrgMargin} y1={marginTop + height - props.d_1 * yScale} x2={(100 + width) / 2 - bwrgMargin} y2={marginTop + height - props.d_1 * yScale} />
+
+			{/* Label d_1 */}
+			<Line className="line-d1" x1={(100 + width) / 2 + labelsMargin} y1={marginTop + height - props.d_1 * yScale} x2={(100 + width) / 2 + labelsMargin} y2={marginTop + height} stroke="#888" strokeWidth={0.3} />
+			<Text className="text-d1" x={(100 + width) / 2 + labelsMargin + 4.5} y={marginTop + height - (yScale * props.d_1 / 2)} text="d" sub="1" color="#888" />
 		</g>
 
 		{/* Spannglied */}
-		<g opacity={props.showSpannglied ? 1 : 0} style={{ transition: "all 0.5s" }}>
-			<Line className="elem-Ap" x1={50 - spglSize} y1={marginTop + height - props.d_p + spglSize} x2={50 + spglSize} y2={marginTop + height - props.d_p - spglSize} />
-			<Line className="elem-Ap" x1={50 - spglSize} y1={marginTop + height - props.d_p - spglSize} x2={50 + spglSize} y2={marginTop + height - props.d_p + spglSize} />
+		<g opacity={props.showSpannglied ? 1 : 0} style={{ transition: "all 0.5s" }} transform={`translate(0,${marginTop + height - props.d_p * yScale})`}>
+			<Line className="elem-Ap" x1={50 - spglSize} y1={+spglSize} x2={50 + spglSize} y2={-spglSize} />
+			<Line className="elem-Ap" x1={50 - spglSize} y1={-spglSize} x2={50 + spglSize} y2={+spglSize} />
 
-			{/* Label */}
-			<Line className="line-dp" x1={(100 + width) / 2 + labelsMargin + 10} y1={marginTop + height - props.d_p} x2={(100 + width) / 2 + labelsMargin + 10} y2={marginTop + height} stroke="#888" strokeWidth={0.3} />
-			<Text className="text-dp" x={(100 + width) / 2 + labelsMargin + 15} y={marginTop + height - (props.d_p / 2)} text="d" sub="p" color="#888" />
+			{/* Label d_p */}
+			<Line className="line-dp" x1={(100 + width) / 2 + labelsMargin + 10} y1={0} x2={(100 + width) / 2 + labelsMargin + 10} y2={props.d_p * yScale} stroke="#888" strokeWidth={0.3} />
+			<Text className="text-dp" x={(100 + width) / 2 + labelsMargin + 15} y={yScale * props.d_p / 2} text="d" sub="p" color="#888" />
 		</g>
 
 		{/* Label h */}
@@ -130,14 +139,6 @@ export function CrossSection(props: CrossSectionProps) {
 		{/* Label b */}
 		<Line className="line-b" x1={(100 - width) / 2} y1={marginTop + height + labelsMargin} x2={(100 + width) / 2} y2={marginTop + height + labelsMargin} stroke="#888" strokeWidth={0.3} />
 		<Text className="text-b" x={50} y={marginTop + height + labelsMargin + 6} text="b" color="#888" />
-
-		{/* Label d_1 */}
-		<Line className="line-d1" x1={(100 + width) / 2 + labelsMargin} y1={marginTop + height - props.d_1} x2={(100 + width) / 2 + labelsMargin} y2={marginTop + height} stroke="#888" strokeWidth={0.3} />
-		<Text className="text-d1" x={(100 + width) / 2 + labelsMargin + 4.5} y={marginTop + height - (props.d_1 / 2)} text="d" sub="1" color="#888" />
-
-		{/* Label d_2 */}
-		<Line className="line-d2" x1={(100 + width) / 2 + labelsMargin} y1={marginTop} x2={(100 + width) / 2 + labelsMargin} y2={marginTop + props.d_2} stroke="#888" strokeWidth={0.3} />
-		<Text className="text-d2" x={(100 + width) / 2 + labelsMargin + 4.5} y={marginTop + (props.d_2 / 2)} text="d" sub="2" color="#888" />
 	</svg>
 }
 
